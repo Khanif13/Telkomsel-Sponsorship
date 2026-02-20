@@ -15,6 +15,10 @@
                         <span class="badge bg-warning text-dark px-4 py-2 fs-6 rounded-pill shadow-sm">Status: Pending</span>
                     @elseif($proposal->status === 'under_review')
                         <span class="badge bg-info px-4 py-2 fs-6 rounded-pill shadow-sm">Status: Under Review</span>
+                    @elseif($proposal->status === 'need_revision')
+                        <span class="badge bg-dark text-white px-4 py-2 fs-6 rounded-pill shadow-sm">
+                            <i class="bi bi-exclamation-circle me-1"></i> Needs Revision
+                        </span>
                     @elseif($proposal->status === 'approved')
                         <span class="badge bg-success px-4 py-2 fs-6 rounded-pill shadow-sm">Status: Approved</span>
                     @else
@@ -24,9 +28,17 @@
             </div>
 
             @if ($proposal->admin_note)
-                <div
-                    class="alert alert-{{ $proposal->status === 'rejected' ? 'danger' : 'info' }} rounded-4 shadow-sm mb-4 border-0 p-4">
-                    <h5 class="fw-bold mb-2">
+                @php
+                    $alertColor = 'info';
+                    if ($proposal->status === 'rejected') {
+                        $alertColor = 'danger';
+                    }
+                    if ($proposal->status === 'need_revision') {
+                        $alertColor = 'warning';
+                    }
+                @endphp
+                <div class="alert alert-{{ $alertColor }} rounded-4 shadow-sm mb-4 border-0 p-4">
+                    <h5 class="fw-bold mb-2 text-dark">
                         <i class="bi bi-chat-left-text-fill me-2"></i> Note from Admin
                     </h5>
                     <p class="mb-0 text-dark">{{ $proposal->admin_note }}</p>
@@ -149,7 +161,7 @@
             @endif
 
             <div class="d-flex justify-content-end align-items-center gap-3 mb-5">
-                @if (Auth::id() === $proposal->user_id && $proposal->status === 'pending')
+                @if (Auth::id() === $proposal->user_id && in_array($proposal->status, ['pending', 'need_revision']))
                     <form action="{{ route('proposals.destroy', $proposal->id) }}" method="POST" class="m-0">
                         @csrf
                         @method('DELETE')

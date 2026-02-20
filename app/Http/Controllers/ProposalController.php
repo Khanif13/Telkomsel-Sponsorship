@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Proposal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProposalController extends Controller
 {
@@ -47,7 +48,7 @@ class ProposalController extends Controller
             'packages.*.exposure' => 'required_with:packages|string',
             'packages.*.slots' => 'required_with:packages|string',
 
-            // Summary (Reduced to 50 chars)
+            // Summary
             'description' => 'required|string|min:50',
             'proposal_file' => 'required|mimes:pdf|max:5120',
         ]);
@@ -59,7 +60,7 @@ class ProposalController extends Controller
 
         $request->user()->proposals()->create($validated);
 
-        return redirect()->route('proposals.index')->with('success', 'Enterprise Sponsorship Proposal submitted successfully and is under review.');
+        return redirect()->route('proposals.index')->with('success', 'Enterprise Sponsorship Proposal submitted successfully.');
     }
 
     public function show(Proposal $proposal)
@@ -73,13 +74,14 @@ class ProposalController extends Controller
 
     public function edit(Proposal $proposal)
     {
-        // Security & Lockdown Checks
+        // Security Check: Only the owner can edit
         if ($proposal->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
 
-        if ($proposal->status !== 'pending') {
-            return redirect()->route('proposals.index')->with('error', 'You cannot edit a proposal that is already under review.');
+        // UPDATED: Lockdown Rule - Allow editing if status is 'pending' OR 'need_revision'
+        if (! in_array($proposal->status, ['pending', 'need_revision'])) {
+            return redirect()->route('proposals.index')->with('error', 'You cannot edit a proposal that is already under review or approved.');
         }
 
         // Properly separate the data decoding logic here
@@ -89,14 +91,13 @@ class ProposalController extends Controller
             $packages = [['name' => '', 'price' => '', 'benefits' => '', 'exposure' => '', 'slots' => '']];
         }
 
-        // Pass the clean data to the view
         return view('proposals.edit', compact('proposal', 'packages'));
     }
 
     public function update(Request $request, Proposal $proposal)
     {
         // Security & Lockdown Checks
-        if ($proposal->user_id !== auth()->id() || $proposal->status !== 'pending') {
+        if ($proposal->user_id !== auth()->id() || ! in_array($proposal->status, ['pending', 'need_revision'])) {
             abort(403);
         }
 
@@ -121,37 +122,39 @@ class ProposalController extends Controller
             'packages.*.exposure' => 'required_with:packages|string',
             'packages.*.slots' => 'required_with:packages|string',
             'description' => 'required|string|min:50',
-            // File is optional on update. If empty, we keep the old one.
             'proposal_file' => 'nullable|mimes:pdf|max:5120',
         ]);
 
         if ($request->hasFile('proposal_file')) {
-            // Optionally delete the old file here if you want to save storage space
-            // Storage::disk('public')->delete($proposal->proposal_file);
-
+            // Delete old file to save space
+            if ($proposal->proposal_file) {
+                Storage::disk('public')->delete($proposal->proposal_file);
+            }
             $filePath = $request->file('proposal_file')->store('proposals', 'public');
             $validated['proposal_file'] = $filePath;
         }
 
+        // RESET STATUS TO PENDING: Moves the proposal back into the admin queue
+        $validated['status'] = 'pending';
+
         $proposal->update($validated);
 
-        return redirect()->route('proposals.index')->with('success', 'Proposal updated successfully.');
+        return redirect()->route('proposals.index')->with('success', 'Proposal updated and resubmitted for review.');
     }
 
     public function destroy(Proposal $proposal)
     {
-        // Security & Lockdown Checks
-        if ($proposal->user_id !== auth()->id() || $proposal->status !== 'pending') {
-            return back()->with('error', 'Cannot delete a proposal that is under review.');
+        // UPDATED Security & Lockdown Checks: Only delete if pending or needs revision
+        if ($proposal->user_id !== auth()->id() || ! in_array($proposal->status, ['pending', 'need_revision'])) {
+            return back()->with('error', 'Cannot withdraw a proposal that is already under review.');
         }
 
-        // Delete the associated PDF file from storage
         if ($proposal->proposal_file) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($proposal->proposal_file);
+            Storage::disk('public')->delete($proposal->proposal_file);
         }
 
         $proposal->delete();
 
-        return redirect()->route('proposals.index')->with('success', 'Proposal has been permanently deleted.');
+        return redirect()->route('proposals.index')->with('success', 'Proposal has been permanently withdrawn.');
     }
 }

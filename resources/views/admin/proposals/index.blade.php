@@ -57,10 +57,29 @@
                                     @endif
                                 </td>
                                 <td class="pe-4 py-3 text-end">
-                                    <a href="{{ route('admin.proposals.show', $proposal->id) }}"
-                                        class="btn btn-sm btn-primary rounded-pill fw-semibold shadow-sm">
-                                        Review <i class="bi bi-arrow-right ms-1"></i>
-                                    </a>
+                                    <div class="btn-group shadow-sm rounded-pill">
+                                        <a href="{{ route('admin.proposals.show', $proposal->id) }}"
+                                            class="btn btn-sm btn-primary fw-bold px-4 rounded-start-pill">
+                                            Review
+                                        </a>
+
+                                        <button type="button"
+                                            class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split rounded-end-pill px-2"
+                                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                        </button>
+
+                                        <ul
+                                            class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4 mt-2 p-2 fs-7">
+                                            <li>
+                                                <a class="dropdown-item fw-semibold py-2 rounded-3 text-secondary"
+                                                    href="{{ Storage::url($proposal->proposal_file) }}" target="_blank">
+                                                    <i class="bi bi-file-earmark-pdf text-danger me-2 fs-6"></i> Download
+                                                    PDF
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

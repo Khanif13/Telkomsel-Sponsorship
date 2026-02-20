@@ -64,7 +64,7 @@
 
             @if (Auth::user()->role === 'super_admin')
                 <li class="nav-item mt-4 mb-2 px-3">
-                    <span class="text-muted fs-7 fw-bold text-uppercase">Super Admin Control</span>
+                    <span class="text-muted fs-7 fw-bold text-uppercase">Super Admin Panel</span>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('superadmin.dashboard') }}"
