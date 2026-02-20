@@ -89,7 +89,7 @@
                             <div class="rounded-circle d-flex align-items-center justify-content-center"
                                 style="width: 48px; height: 48px; background-color: #d1e7dd;">
                                 <i
-                                    class="bi {{ Auth::user()->role === 'admin' ? 'bi-search text-info' : 'bi-check-circle-fill text-success' }} fs-4"></i>
+                                    class="bi {{ Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin' ? 'bi-search text-info' : 'bi-check-circle-fill text-success' }} fs-4"></i>
                             </div>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                             <div class="rounded-circle d-flex align-items-center justify-content-center"
                                 style="width: 48px; height: 48px; background-color: #f8d7da;">
                                 <i
-                                    class="bi {{ Auth::user()->role === 'admin' ? 'bi-trophy-fill text-success' : 'bi-x-circle-fill text-danger' }} fs-4"></i>
+                                    class="bi {{ Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin' ? 'bi-trophy-fill text-success' : 'bi-x-circle-fill text-danger' }} fs-4"></i>
                             </div>
                         </div>
                     </div>
@@ -129,7 +129,7 @@
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <div class="card-header bg-white p-4 border-bottom-0 d-flex justify-content-between align-items-center">
                 <h5 class="fw-bold text-dark mb-0">Recent Activity</h5>
-                <a href="{{ Auth::user()->role === 'admin' ? route('admin.proposals.index') : route('proposals.index') }}"
+                <a href="{{ Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin' ? route('admin.proposals.index') : route('proposals.index') }}"
                     class="btn btn-sm btn-outline-secondary rounded-pill fw-semibold">
                     View All <i class="bi bi-arrow-right ms-1"></i>
                 </a>
