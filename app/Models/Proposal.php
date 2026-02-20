@@ -12,6 +12,9 @@ class Proposal extends Model
     protected $fillable = [
         'event_name',
         'organizer',
+        'contact_name',
+        'contact_email',
+        'contact_phone',
         'location',
         'event_date',
         'event_category',
@@ -19,8 +22,6 @@ class Proposal extends Model
         'expected_participants',
         'target_audience',
         'request_type',
-        'requested_amount',
-        'funding_breakdown',
         'support_description',
         'packages',
         'description',

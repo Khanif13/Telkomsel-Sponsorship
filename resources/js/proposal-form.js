@@ -3,35 +3,35 @@ document.addEventListener('DOMContentLoaded', function () {
     const proposalForm = document.getElementById('proposalForm');
     if (!proposalForm) return;
 
-    // 1. DYNAMIC LOGIC
+    // 1. DYNAMIC LOGIC & NUMBERING
     const requestTypeSelect = document.getElementById('request_type');
-    const freshMoneyFields = document.getElementById('fresh_money_fields');
     const otherSupportFields = document.getElementById('other_support_fields');
-    const packagesSection = document.getElementById('packages_section'); // NEW
-    
-    const inputAmount = document.getElementById('requested_amount');
-    const inputBreakdown = document.getElementById('funding_breakdown');
+    const packagesSection = document.getElementById('packages_section');
     const inputSupport = document.getElementById('support_description');
+    const finalStepNumber = document.getElementById('final_step_number');
 
     function toggleRequestFields() {
         const type = requestTypeSelect.value;
         
         if (type === 'Fresh Money Funding') {
-            freshMoneyFields.classList.remove('d-none');
             otherSupportFields.classList.add('d-none');
-            packagesSection.classList.remove('d-none'); // Show Packages
-            
-            inputAmount.required = true;
-            inputBreakdown.required = true;
+            packagesSection.classList.remove('d-none');
             inputSupport.required = false;
-        } else if (type !== '') {
-            freshMoneyFields.classList.add('d-none');
-            otherSupportFields.classList.remove('d-none');
-            packagesSection.classList.add('d-none'); // Hide Packages
             
-            inputAmount.required = false;
-            inputBreakdown.required = false;
-            inputSupport.required = true;
+            if(finalStepNumber) finalStepNumber.textContent = '4';
+            
+        } else {
+            packagesSection.classList.add('d-none');
+            
+            if(finalStepNumber) finalStepNumber.textContent = '3';
+            
+            if (type !== '') {
+                otherSupportFields.classList.remove('d-none');
+                inputSupport.required = true;
+            } else {
+                otherSupportFields.classList.add('d-none');
+                inputSupport.required = false;
+            }
         }
     }
 
@@ -92,7 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const len = execSummary.value.length;
         charCount.textContent = len;
         
-        if (len < 100) {
+        // Changed from 100 to 50
+        if (len < 50) {
             charCount.classList.add('text-danger');
             charCount.classList.remove('text-success');
         } else {

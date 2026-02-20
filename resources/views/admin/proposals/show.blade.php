@@ -1,32 +1,81 @@
 @extends('layouts.dashboard')
 
-@section('page_title', 'Proposal Details')
+@section('page_title', 'Review Proposal')
 
 @section('content')
     <div class="row justify-content-center pb-5">
         <div class="col-lg-10">
 
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm border-0 mb-4" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <a href="{{ route('proposals.index') }}" class="btn btn-outline-secondary rounded-pill fw-semibold shadow-sm">
-                    <i class="bi bi-arrow-left me-1"></i> Back
+                <a href="{{ route('admin.proposals.index') }}"
+                    class="btn btn-outline-secondary rounded-pill fw-semibold shadow-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Back to Pipeline
                 </a>
                 <div>
                     @if ($proposal->status === 'pending')
-                        <span class="badge bg-warning text-dark px-4 py-2 fs-6 rounded-pill shadow-sm">Status: Pending</span>
+                        <span class="badge bg-warning text-dark px-4 py-2 fs-6 rounded-pill shadow-sm">Current Status:
+                            Pending</span>
                     @elseif($proposal->status === 'under_review')
-                        <span class="badge bg-info px-4 py-2 fs-6 rounded-pill shadow-sm">Status: Under Review</span>
+                        <span class="badge bg-info px-4 py-2 fs-6 rounded-pill shadow-sm">Current Status: Under
+                            Review</span>
                     @elseif($proposal->status === 'approved')
-                        <span class="badge bg-success px-4 py-2 fs-6 rounded-pill shadow-sm">Status: Approved</span>
+                        <span class="badge bg-success px-4 py-2 fs-6 rounded-pill shadow-sm">Current Status: Approved</span>
                     @else
-                        <span class="badge bg-danger px-4 py-2 fs-6 rounded-pill shadow-sm">Status: Rejected</span>
+                        <span class="badge bg-danger px-4 py-2 fs-6 rounded-pill shadow-sm">Current Status: Rejected</span>
                     @endif
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-lg rounded-4 mb-4 border-top border-primary border-4">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center bg-light rounded-4">
+                    <div>
+                        <h5 class="fw-bold text-dark mb-1">Administrator Action</h5>
+                        <div class="text-muted fs-7">Update the status of this proposal to trigger notifications to the
+                            applicant.</div>
+                    </div>
+                    <form action="{{ route('admin.proposals.update-status', $proposal->id) }}" method="POST"
+                        class="d-flex gap-2">
+                        @csrf
+                        @method('PATCH')
+
+                        <button type="submit" name="status" value="under_review"
+                            class="btn btn-info fw-bold rounded-pill text-white shadow-sm {{ $proposal->status === 'under_review' ? 'disabled' : '' }}">
+                            <i class="bi bi-search me-1"></i> Under Review
+                        </button>
+
+                        <button type="submit" name="status" value="approved"
+                            class="btn btn-success fw-bold rounded-pill shadow-sm {{ $proposal->status === 'approved' ? 'disabled' : '' }}">
+                            <i class="bi bi-check-circle-fill me-1"></i> Approve
+                        </button>
+
+                        <button type="submit" name="status" value="rejected"
+                            class="btn btn-danger fw-bold rounded-pill shadow-sm {{ $proposal->status === 'rejected' ? 'disabled' : '' }}">
+                            <i class="bi bi-x-circle-fill me-1"></i> Reject
+                        </button>
+                    </form>
                 </div>
             </div>
 
             <div class="card border-0 shadow-sm rounded-4 mb-4">
                 <div class="card-body p-5">
-                    <h3 class="fw-bolder text-dark mb-1">{{ $proposal->event_name }}</h3>
-                    <p class="text-muted fs-5 mb-4"><i class="bi bi-building"></i> {{ $proposal->organizer }}</p>
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h3 class="fw-bolder text-dark mb-1">{{ $proposal->event_name }}</h3>
+                            <p class="text-muted fs-5 mb-0"><i class="bi bi-building"></i> {{ $proposal->organizer }}</p>
+                        </div>
+                        <div class="text-end text-muted fs-7">
+                            Submitted by:<br>
+                            <strong class="text-dark">{{ $proposal->user->name }}</strong><br>
+                            {{ $proposal->created_at->format('d M Y, H:i') }}
+                        </div>
+                    </div>
 
                     <div class="bg-light border rounded-3 p-3 mb-4">
                         <div class="fw-bold text-dark mb-2"><i class="bi bi-person-badge me-2 text-danger"></i> Primary
@@ -85,7 +134,6 @@
                         <div class="text-muted fs-7 fw-bold text-uppercase mb-2">Executive Summary</div>
                         <p class="mb-0 bg-light p-3 rounded-3">{{ $proposal->description }}</p>
                     </div>
-
                 </div>
             </div>
 

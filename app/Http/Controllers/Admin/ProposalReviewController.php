@@ -8,27 +8,33 @@ use Illuminate\Http\Request;
 
 class ProposalReviewController extends Controller
 {
-    // Display all proposals across the system
+    // Menampilkan semua proposal yang masuk ke sistem
     public function index()
     {
-        // 'with('user')' prevents the N+1 query problem, making the app much faster
+        // Eager load 'user' untuk mencegah N+1 Query problem
         $proposals = Proposal::with('user')->latest()->paginate(15);
 
         return view('admin.proposals.index', compact('proposals'));
     }
 
-    // Process the status change (Approve/Reject)
+    // NEW: Menampilkan detail spesifik proposal untuk direview
+    public function show(Proposal $proposal)
+    {
+        // Load data user yang submit
+        $proposal->load('user');
+
+        return view('admin.proposals.show', compact('proposal'));
+    }
+
+    // Memproses perubahan status (Approve/Reject/Under Review)
     public function updateStatus(Request $request, Proposal $proposal)
     {
-        // Validate that the admin submitted a valid status
         $validated = $request->validate([
             'status' => 'required|in:pending,under_review,approved,rejected',
         ]);
 
-        // Update the database
         $proposal->update(['status' => $validated['status']]);
 
-        // Return to the dashboard with a success message
-        return back()->with('success', 'Proposal status updated to '.ucfirst($validated['status']));
+        return back()->with('success', 'Proposal status has been updated to '.strtoupper($validated['status']).'.');
     }
 }

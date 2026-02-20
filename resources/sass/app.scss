@@ -12,3 +12,86 @@
     border-width: 2px !important;
     border-color: #dee2e6 !important;
 }
+
+/* --- TELKOMSEL BRANDING DNA --- */
+:root {
+    --tsel-red: #EC2028;
+    --tsel-dark-blue: #001A41;
+    --tsel-bg-light: #F4F7FE;
+    --tsel-text-muted: #6c757d;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--tsel-bg-light);
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+/* Override Bootstrap Danger to exact Telkomsel Red */
+.btn-danger {
+    background-color: var(--tsel-red) !important;
+    border-color: var(--tsel-red) !important;
+    color: #fff !important;
+}
+.btn-danger:hover {
+    background-color: #d11b22 !important;
+    border-color: #d11b22 !important;
+}
+.text-danger { color: var(--tsel-red) !important; }
+.bg-danger { background-color: var(--tsel-red) !important; }
+
+/* Sleek White Sidebar */
+.sidebar {
+    width: 280px;
+    height: 100vh; 
+    background-color: #ffffff;
+    border-right: 1px solid #e9ecef;
+    overflow-y: auto; 
+    z-index: 10;
+}
+
+.tsel-logo {
+    color: var(--tsel-dark-blue);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    font-size: 1.5rem;
+}
+
+/* Pill-shaped navigation links */
+.sidebar .nav-link {
+    color: var(--tsel-text-muted);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    border-radius: 50rem;
+    padding: 0.8rem 1.25rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #fce8e9;
+    color: var(--tsel-red);
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--tsel-red);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(236, 32, 40, 0.25);
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+    height: 100vh; 
+}
+
+.topbar {
+    background: #ffffff;
+    border-bottom: 1px solid #e9ecef;
+    flex-shrink: 0; 
+}
+
+/* Softer shadows to mimic the real website's floating cards */
+.shadow-sm {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+}

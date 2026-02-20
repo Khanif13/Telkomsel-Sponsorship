@@ -23,8 +23,8 @@
 
                 <div class="card border-0 shadow-sm rounded-4 mb-4">
                     <div class="card-header bg-white p-4 border-bottom-0 rounded-top-4">
-                        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-calendar-event text-danger me-2"></i> 1. Event
-                            Information</h5>
+                        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-calendar-event text-danger me-2"></i> 1. Event &
+                            Contact Information</h5>
                     </div>
                     <div class="card-body p-4 pt-0">
                         <div class="row g-4">
@@ -38,7 +38,30 @@
                                 <input type="text" name="organizer" class="form-control" value="{{ old('organizer') }}"
                                     required>
                             </div>
-                            <div class="col-md-6">
+
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold text-muted mb-3 border-bottom pb-2">Contact Person Details</h6>
+                            </div>
+                            <div class="col-md-4 mt-0">
+                                <label class="form-label fw-semibold fs-7 text-muted">Full Name *</label>
+                                <input type="text" name="contact_name" class="form-control"
+                                    value="{{ old('contact_name') }}" required>
+                            </div>
+                            <div class="col-md-4 mt-0">
+                                <label class="form-label fw-semibold fs-7 text-muted">Email Address *</label>
+                                <input type="email" name="contact_email" class="form-control"
+                                    value="{{ old('contact_email') }}" required>
+                            </div>
+                            <div class="col-md-4 mt-0">
+                                <label class="form-label fw-semibold fs-7 text-muted">Phone / WhatsApp *</label>
+                                <input type="text" name="contact_phone" class="form-control"
+                                    value="{{ old('contact_phone') }}" placeholder="e.g. +62812..." required>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <h6 class="fw-bold text-muted mb-3 border-bottom pb-2">Event Specifics</h6>
+                            </div>
+                            <div class="col-md-6 mt-0">
                                 <label class="form-label fw-semibold">Event Category *</label>
                                 <select name="event_category" class="form-select" required>
                                     <option value="" disabled selected>Select category...</option>
@@ -61,7 +84,7 @@
                                     </option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mt-0">
                                 <label class="form-label fw-semibold">Event Scale *</label>
                                 <select name="event_scale" class="form-select" required>
                                     <option value="" disabled selected>Select scale...</option>
@@ -109,7 +132,8 @@
                             <div class="col-12">
                                 <label class="form-label fw-semibold">What type of sponsorship do you primarily request?
                                     *</label>
-                                <select name="request_type" id="request_type" class="form-select form-select-lg" required>
+                                <select name="request_type" id="request_type" class="form-select form-select-lg"
+                                    required>
                                     <option value="" disabled selected>Select an option...</option>
                                     <option value="Fresh Money Funding"
                                         {{ old('request_type') == 'Fresh Money Funding' ? 'selected' : '' }}>Fresh Money
@@ -134,24 +158,11 @@
                                 </select>
                             </div>
 
-                            <div class="col-12 d-none" id="fresh_money_fields">
-                                <div class="row g-4 bg-light p-3 rounded-3 border">
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold text-success">Requested Amount (IDR) *</label>
-                                        <input type="number" name="requested_amount" id="requested_amount"
-                                            class="form-control" value="{{ old('requested_amount') }}">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label fw-semibold">Funding Usage Breakdown *</label>
-                                        <textarea name="funding_breakdown" id="funding_breakdown" class="form-control" rows="2"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="col-12 d-none" id="other_support_fields">
                                 <div class="bg-light p-3 rounded-3 border">
                                     <label class="form-label fw-semibold text-primary">Support Needed Description *</label>
-                                    <textarea name="support_description" id="support_description" class="form-control" rows="2"></textarea>
+                                    <textarea name="support_description" id="support_description" class="form-control" rows="2"
+                                        placeholder="Specify exactly what product, media, or internet support you need..."></textarea>
                                 </div>
                             </div>
                         </div>
@@ -200,8 +211,8 @@
 
                 <div class="card border-0 shadow-sm rounded-4 mb-4">
                     <div class="card-header bg-white p-4 border-bottom-0 rounded-top-4">
-                        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-file-text text-danger me-2"></i> 4. Executive
-                            Summary & Document</h5>
+                        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-file-text text-danger me-2"></i> <span
+                                id="final_step_number">3</span>. Executive Summary & Document</h5>
                     </div>
                     <div class="card-body p-4 pt-0">
                         <div class="row g-4">
@@ -209,7 +220,7 @@
                                 <label class="form-label fw-semibold d-flex justify-content-between">
                                     <span>Executive Summary *</span>
                                     <span class="fs-7 text-muted">Characters: <span id="char_count"
-                                            class="text-danger fw-bold">0</span> / Min 100</span>
+                                            class="text-danger fw-bold">0</span> / Min 50</span>
                                 </label>
                                 <textarea name="description" id="description" class="form-control" rows="4" required>{{ old('description') }}</textarea>
                             </div>

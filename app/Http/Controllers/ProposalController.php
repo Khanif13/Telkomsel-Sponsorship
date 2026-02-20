@@ -22,8 +22,12 @@ class ProposalController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            // Event & Contact
             'event_name' => 'required|string|max:255',
             'organizer' => 'required|string|max:255',
+            'contact_name' => 'required|string|max:255',
+            'contact_email' => 'required|email|max:255',
+            'contact_phone' => 'required|string|max:255',
             'location' => 'required|string|max:255',
             'event_date' => 'required|date|after:today',
             'event_category' => 'required|string',
@@ -31,12 +35,11 @@ class ProposalController extends Controller
             'expected_participants' => 'required|integer|min:1',
             'target_audience' => 'required|string',
 
+            // Request Type
             'request_type' => 'required|string',
-            'requested_amount' => 'nullable|required_if:request_type,Fresh Money Funding|numeric|min:0',
-            'funding_breakdown' => 'nullable|required_if:request_type,Fresh Money Funding|string',
-            'support_description' => 'nullable|string',
+            'support_description' => 'nullable|required_unless:request_type,Fresh Money Funding|string',
 
-            // Packages are completely ignored UNLESS it is Fresh Money Funding
+            // Packages
             'packages' => 'exclude_unless:request_type,Fresh Money Funding|required|array|min:1',
             'packages.*.name' => 'required_with:packages|string|max:255',
             'packages.*.price' => 'nullable|numeric|min:0',
@@ -44,7 +47,8 @@ class ProposalController extends Controller
             'packages.*.exposure' => 'required_with:packages|string',
             'packages.*.slots' => 'required_with:packages|string',
 
-            'description' => 'required|string|min:100',
+            // Summary (Reduced to 50 chars)
+            'description' => 'required|string|min:50',
             'proposal_file' => 'required|mimes:pdf|max:5120',
         ]);
 
@@ -60,7 +64,6 @@ class ProposalController extends Controller
 
     public function show(Proposal $proposal)
     {
-        // Ensure users can only view their own proposals (Admins will bypass this in their own controller later)
         if ($proposal->user_id !== auth()->id()) {
             abort(403);
         }
