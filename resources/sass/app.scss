@@ -21,9 +21,15 @@
     --tsel-text-muted: #6c757d;
 }
 
+/* Global Body */
 body {
     font-family: 'Inter', sans-serif;
     background-color: var(--tsel-bg-light);
+    /* Removed the 100vh and overflow:hidden from here so normal pages can scroll! */
+}
+
+/* Specific class just for the Admin/User Dashboard */
+.dashboard-body {
     height: 100vh; 
     overflow: hidden; 
 }
@@ -94,4 +100,113 @@ body {
 /* Softer shadows to mimic the real website's floating cards */
 .shadow-sm {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* --- LANDING PAGE SPECIFICS --- */
+
+.tsel-navbar {
+    background-color: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, var(--tsel-bg-light) 0%, #ffffff 100%);
+    padding-top: 140px;
+    padding-bottom: 100px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.hero-title {
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    color: var(--tsel-dark-blue);
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--tsel-text-muted);
+    font-weight: 500;
+}
+
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e9ecef;
+    background: #ffffff;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 26, 65, 0.08) !important;
+    border-color: #fce8e9;
+}
+
+.icon-box {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background-color: #fce8e9;
+    color: var(--tsel-red);
+    font-size: 1.75rem;
+}
+
+.cta-section {
+    background-color: var(--tsel-dark-blue);
+    border-radius: 40px;
+    padding: 5rem 2rem;
+    color: #ffffff;
+    box-shadow: 0 20px 40px rgba(0, 26, 65, 0.15);
+}
+
+/* --- AUTH PAGES SPECIFICS --- */
+.auth-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--tsel-bg-light) 0%, #e2e8f0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.auth-card {
+    background: #ffffff;
+    border: none;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 26, 65, 0.08);
+    width: 100%;
+    max-width: 450px;
+    padding: 3rem 2.5rem;
+}
+
+.auth-input {
+    border-radius: 12px !important;
+    padding: 0.75rem 1.25rem !important;
+    border: 1px solid #dee2e6 !important;
+    background-color: #f8f9fa !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.auth-input:focus {
+    border-color: var(--tsel-red) !important;
+    box-shadow: 0 0 0 4px rgba(236, 32, 40, 0.1) !important;
+    background-color: #ffffff !important;
+}
+
+.auth-link {
+    color: var(--tsel-dark-blue);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.auth-link:hover {
+    color: var(--tsel-red);
 }
