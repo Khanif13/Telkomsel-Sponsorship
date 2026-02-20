@@ -19,8 +19,8 @@
             </a>
         </div>
 
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-            <div class="table-responsive">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+            <div class="table-responsive" style="min-height: 320px; overflow-y: visible;">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light text-muted">
                         <tr>
@@ -58,14 +58,55 @@
                                     @endif
                                 </td>
                                 <td class="pe-4 py-3 text-end">
-                                    <a href="{{ route('proposals.show', $proposal->id) }}"
-                                        class="btn btn-sm btn-primary rounded-pill fw-semibold me-1 shadow-sm">
-                                        <i class="bi bi-eye"></i> View
-                                    </a>
-                                    <a href="{{ Storage::url($proposal->proposal_file) }}" target="_blank"
-                                        class="btn btn-sm btn-outline-secondary rounded-pill fw-semibold shadow-sm">
-                                        <i class="bi bi-download"></i> PDF
-                                    </a>
+
+                                    <div class="btn-group shadow-sm rounded-pill">
+                                        <a href="{{ route('proposals.show', $proposal->id) }}"
+                                            class="btn btn-sm btn-primary fw-bold px-4 rounded-start-pill">
+                                            View
+                                        </a>
+
+                                        <button type="button"
+                                            class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split rounded-end-pill px-2"
+                                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                        </button>
+
+                                        <ul
+                                            class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4 mt-2 p-2 fs-7">
+                                            <li>
+                                                <a class="dropdown-item fw-semibold py-2 rounded-3 text-secondary"
+                                                    href="{{ Storage::url($proposal->proposal_file) }}" target="_blank">
+                                                    <i class="bi bi-file-earmark-pdf text-danger me-2 fs-6"></i> Download
+                                                    PDF
+                                                </a>
+                                            </li>
+
+                                            @if ($proposal->status === 'pending')
+                                                <li>
+                                                    <hr class="dropdown-divider opacity-10 my-1">
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item fw-semibold py-2 rounded-3 text-secondary"
+                                                        href="{{ route('proposals.edit', $proposal->id) }}">
+                                                        <i class="bi bi-pencil-square text-warning me-2 fs-6"></i> Edit
+                                                        Details
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <form action="{{ route('proposals.destroy', $proposal->id) }}"
+                                                        method="POST" class="m-0">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="dropdown-item fw-semibold py-2 rounded-3 text-danger"
+                                                            onclick="return confirm('Withdraw this proposal? This cannot be undone.')">
+                                                            <i class="bi bi-x-circle me-2 fs-6"></i> Withdraw Request
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

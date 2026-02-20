@@ -17,7 +17,7 @@ class ProposalReviewController extends Controller
         return view('admin.proposals.index', compact('proposals'));
     }
 
-    // NEW: Menampilkan detail spesifik proposal untuk direview
+    // Menampilkan detail spesifik proposal untuk direview
     public function show(Proposal $proposal)
     {
         // Load data user yang submit
@@ -30,11 +30,16 @@ class ProposalReviewController extends Controller
     public function updateStatus(Request $request, Proposal $proposal)
     {
         $validated = $request->validate([
-            'status' => 'required|in:pending,under_review,approved,rejected',
+            // ADDED need_revision to the allowed list below:
+            'status' => 'required|in:pending,under_review,approved,rejected,need_revision',
+            'admin_note' => 'nullable|string',
         ]);
 
-        $proposal->update(['status' => $validated['status']]);
+        $proposal->update([
+            'status' => $validated['status'],
+            'admin_note' => $validated['admin_note'],
+        ]);
 
-        return back()->with('success', 'Proposal status has been updated to '.strtoupper($validated['status']).'.');
+        return back()->with('success', 'Proposal status and feedback updated to '.strtoupper($validated['status']).'.');
     }
 }

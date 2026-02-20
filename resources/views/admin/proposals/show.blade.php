@@ -34,31 +34,40 @@
             </div>
 
             <div class="card border-0 shadow-lg rounded-4 mb-4 border-top border-primary border-4">
-                <div class="card-body p-4 d-flex justify-content-between align-items-center bg-light rounded-4">
-                    <div>
+                <div class="card-body p-4 bg-light rounded-4">
+                    <div class="mb-3">
                         <h5 class="fw-bold text-dark mb-1">Administrator Action</h5>
-                        <div class="text-muted fs-7">Update the status of this proposal to trigger notifications to the
+                        <div class="text-muted fs-7">Update the status of this proposal and provide feedback to the
                             applicant.</div>
                     </div>
-                    <form action="{{ route('admin.proposals.update-status', $proposal->id) }}" method="POST"
-                        class="d-flex gap-2">
+
+                    <form action="{{ route('admin.proposals.update-status', $proposal->id) }}" method="POST">
                         @csrf
                         @method('PATCH')
 
-                        <button type="submit" name="status" value="under_review"
-                            class="btn btn-info fw-bold rounded-pill text-white shadow-sm {{ $proposal->status === 'under_review' ? 'disabled' : '' }}">
-                            <i class="bi bi-search me-1"></i> Under Review
-                        </button>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted fs-7 text-uppercase">Feedback / Reason
+                                (Optional)</label>
+                            <textarea name="admin_note" class="form-control border-secondary-subtle rounded-3 shadow-sm" rows="3"
+                                placeholder="Explain why this is rejected or requires changes...">{{ $proposal->admin_note }}</textarea>
+                        </div>
 
-                        <button type="submit" name="status" value="approved"
-                            class="btn btn-success fw-bold rounded-pill shadow-sm {{ $proposal->status === 'approved' ? 'disabled' : '' }}">
-                            <i class="bi bi-check-circle-fill me-1"></i> Approve
-                        </button>
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" name="status" value="under_review"
+                                class="btn btn-info fw-bold rounded-pill text-white shadow-sm {{ $proposal->status === 'under_review' ? 'disabled' : '' }}">
+                                <i class="bi bi-search me-1"></i> Under Review
+                            </button>
 
-                        <button type="submit" name="status" value="rejected"
-                            class="btn btn-danger fw-bold rounded-pill shadow-sm {{ $proposal->status === 'rejected' ? 'disabled' : '' }}">
-                            <i class="bi bi-x-circle-fill me-1"></i> Reject
-                        </button>
+                            <button type="submit" name="status" value="approved"
+                                class="btn btn-success fw-bold rounded-pill shadow-sm {{ $proposal->status === 'approved' ? 'disabled' : '' }}">
+                                <i class="bi bi-check-circle-fill me-1"></i> Approve
+                            </button>
+
+                            <button type="submit" name="status" value="rejected"
+                                class="btn btn-danger fw-bold rounded-pill shadow-sm {{ $proposal->status === 'rejected' ? 'disabled' : '' }}">
+                                <i class="bi bi-x-circle-fill me-1"></i> Reject
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>

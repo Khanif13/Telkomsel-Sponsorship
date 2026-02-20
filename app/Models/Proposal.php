@@ -10,23 +10,25 @@ class Proposal extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'event_name',
         'organizer',
         'contact_name',
         'contact_email',
         'contact_phone',
-        'location',
-        'event_date',
         'event_category',
         'event_scale',
+        'event_date',
+        'location',
         'expected_participants',
         'target_audience',
+        'description',
         'request_type',
         'support_description',
         'packages',
-        'description',
         'proposal_file',
         'status',
+        'admin_note',
     ];
 
     protected $casts = [

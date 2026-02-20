@@ -23,6 +23,16 @@
                 </div>
             </div>
 
+            @if ($proposal->admin_note)
+                <div
+                    class="alert alert-{{ $proposal->status === 'rejected' ? 'danger' : 'info' }} rounded-4 shadow-sm mb-4 border-0 p-4">
+                    <h5 class="fw-bold mb-2">
+                        <i class="bi bi-chat-left-text-fill me-2"></i> Note from Admin
+                    </h5>
+                    <p class="mb-0 text-dark">{{ $proposal->admin_note }}</p>
+                </div>
+            @endif
+
             <div class="card border-0 shadow-sm rounded-4 mb-4">
                 <div class="card-body p-5">
                     <h3 class="fw-bolder text-dark mb-1">{{ $proposal->event_name }}</h3>
@@ -138,7 +148,23 @@
                 </div>
             @endif
 
-            <div class="d-flex justify-content-end mb-5">
+            <div class="d-flex justify-content-end align-items-center gap-3 mb-5">
+                @if (Auth::id() === $proposal->user_id && $proposal->status === 'pending')
+                    <form action="{{ route('proposals.destroy', $proposal->id) }}" method="POST" class="m-0">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-danger btn-lg rounded-pill px-4 fw-bold shadow-sm"
+                            onclick="return confirm('Are you sure you want to withdraw this proposal? This cannot be undone.')">
+                            <i class="bi bi-trash3 me-2"></i> Withdraw
+                        </button>
+                    </form>
+
+                    <a href="{{ route('proposals.edit', $proposal->id) }}"
+                        class="btn btn-warning btn-lg rounded-pill px-4 fw-bold text-dark shadow-sm">
+                        <i class="bi bi-pencil-square me-2"></i> Edit Proposal
+                    </a>
+                @endif
+
                 <a href="{{ Storage::url($proposal->proposal_file) }}" target="_blank"
                     class="btn btn-dark btn-lg px-5 rounded-pill fw-bold shadow-lg">
                     <i class="bi bi-file-earmark-pdf-fill me-2"></i> Download Full PDF
