@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -49,5 +50,14 @@ class User extends Authenticatable
     public function proposals()
     {
         return $this->hasMany(Proposal::class);
+    }
+
+    /**
+     * Automatically format the role for display.
+     */
+    public function getRoleLabelAttribute()
+    {
+        // This turns 'super_admin' into 'Super Admin' and 'user' into 'User'
+        return str_replace('_', ' ', ucwords($this->role, '_'));
     }
 }

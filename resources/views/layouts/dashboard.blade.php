@@ -18,7 +18,7 @@
 
     <aside class="sidebar p-4 d-flex flex-column flex-shrink-0 shadow-sm">
         <a href="/" class="text-decoration-none mb-5 px-2 d-flex align-items-center gap-2">
-            <img src="{{ asset('images/logo-telkomsel.png') }}" alt="Telkomsel" height="28"
+            <img src="{{ asset('images/logo-telkomsel.png') }}" alt="Telkomsel" height="30"
                 style="object-fit: contain; mix-blend-mode: multiply;">
 
             <span class="border-start border-secondary border-opacity-25 ps-2 ms-1 tsel-logo lh-1"
@@ -62,6 +62,30 @@
                 </li>
             @endif
 
+            @if (Auth::user()->role === 'super_admin')
+                <li class="nav-item mt-4 mb-2 px-3">
+                    <span class="text-muted fs-7 fw-bold text-uppercase">Super Admin Control</span>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('superadmin.dashboard') }}"
+                        class="nav-link {{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
+                        <i class="bi bi-speedometer2 me-2"></i> System Overview
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('superadmin.users.index') }}"
+                        class="nav-link {{ request()->routeIs('superadmin.users.*') ? 'active' : '' }}">
+                        <i class="bi bi-people-fill me-2"></i> User Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('superadmin.cms.index') }}"
+                        class="nav-link {{ request()->routeIs('superadmin.cms.*') ? 'active' : '' }}">
+                        <i class="bi bi-layout-text-window-reverse me-2"></i> Landing Page CMS
+                    </a>
+                </li>
+            @endif
+
         </ul>
 
         <div class="mt-auto px-2 pt-4 border-top">
@@ -86,8 +110,9 @@
                     <div class="d-flex flex-column text-start me-1">
                         <span class="fw-bold lh-1"
                             style="font-size: 0.9rem; color: var(--tsel-dark-blue);">{{ Auth::user()->name }}</span>
-                        <span class="text-muted text-capitalize mt-1"
-                            style="font-size: 0.75rem;">{{ Auth::user()->role }}</span>
+                        <span class="text-muted text-capitalize mt-1" style="font-size: 0.75rem;">
+                            {{ Auth::user()->role_label }}
+                        </span>
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 mt-2">
