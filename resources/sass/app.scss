@@ -187,7 +187,12 @@ body {
 
 .auth-input {
     border-radius: 12px !important;
-    padding: 0.75rem 1.25rem !important;
+    
+    /* Split the padding so we don't overwrite Bootstrap's ps-5 class */
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+    padding-right: 1.25rem !important;
+    
     border: 1px solid #dee2e6 !important;
     background-color: #f8f9fa !important;
     font-size: 0.95rem !important;

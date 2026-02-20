@@ -16,7 +16,7 @@
         <div class="auth-card text-center" style="max-width: 500px;">
 
             <a href="/" class="text-decoration-none d-inline-flex align-items-center gap-2 mb-4">
-                <img src="{{ asset('images/logo-telkomsel.jpg') }}" alt="Telkomsel" height="32"
+                <img src="{{ asset('images/logo-telkomsel.png') }}" alt="Telkomsel" height="32"
                     style="object-fit: contain; mix-blend-mode: multiply;">
                 <span class="border-start border-secondary border-opacity-25 ps-2 ms-1 fw-bolder fs-4"
                     style="color: var(--tsel-dark-blue); letter-spacing: -0.5px;">
@@ -63,32 +63,35 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label for="password" class="form-label fw-semibold fs-7 text-muted mb-1">Password</label>
-                        <div class="position-relative">
-                            <i class="bi bi-lock position-absolute top-50 translate-middle-y text-muted ms-3"></i>
+                        <div class="position-relative d-flex align-items-center">
+                            <i class="bi bi-lock position-absolute ms-3 text-muted"></i>
                             <input id="password" type="password"
-                                class="form-control auth-input ps-5 @error('password') is-invalid @enderror"
-                                name="password" required autocomplete="new-password" placeholder="Min. 8 chars">
+                                class="form-control auth-input ps-5 pe-5 @error('password') is-invalid @enderror"
+                                name="password" required placeholder="Min. 8 chars">
+                            <button type="button" class="btn border-0 position-absolute end-0 me-2 toggle-password"
+                                style="background: transparent;">
+                                <i class="bi bi-eye text-muted"></i>
+                            </button>
                         </div>
-                        @error('password')
-                            <span class="invalid-feedback d-block fs-7"
-                                role="alert"><strong>{{ $message }}</strong></span>
-                        @enderror
                     </div>
 
                     <div class="col-md-6">
                         <label for="password-confirm" class="form-label fw-semibold fs-7 text-muted mb-1">Confirm
                             Password</label>
-                        <div class="position-relative">
-                            <i class="bi bi-lock-fill position-absolute top-50 translate-middle-y text-muted ms-3"></i>
-                            <input id="password-confirm" type="password" class="form-control auth-input ps-5"
-                                name="password_confirmation" required autocomplete="new-password"
-                                placeholder="Repeat password">
+                        <div class="position-relative d-flex align-items-center">
+                            <i class="bi bi-lock-fill position-absolute ms-3 text-muted"></i>
+                            <input id="password-confirm" type="password" class="form-control auth-input ps-5 pe-5"
+                                name="password_confirmation" required placeholder="Repeat password">
+                            <button type="button" class="btn border-0 position-absolute end-0 me-2 toggle-password"
+                                style="background: transparent;">
+                                <i class="bi bi-eye text-muted"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold py-2 mb-4 shadow-sm">
-                    Create Account <i class="bi bi-person-plus-fill ms-1"></i>
+                    Create Account
                 </button>
 
                 <div class="text-center fs-7 text-muted fw-medium">
