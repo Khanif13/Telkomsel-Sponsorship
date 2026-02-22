@@ -3,6 +3,43 @@
 @section('page_title', 'Overview')
 
 @section('content')
+    <style>
+        .tsel-pagination nav>div.d-sm-flex {
+            align-items: center;
+        }
+
+        .tsel-pagination p.text-muted {
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        .tsel-pagination .page-item.active .page-link {
+            background-color: var(--tsel-red);
+            border-color: var(--tsel-red);
+            color: white;
+            border-radius: 6px;
+        }
+
+        .tsel-pagination .page-link {
+            color: var(--tsel-dark-blue);
+            border-radius: 6px;
+            margin: 0 3px;
+            font-weight: 600;
+            border: 1px solid #eaeaea;
+        }
+
+        .tsel-pagination .page-link:hover {
+            background-color: #fce8e9;
+            color: var(--tsel-red);
+            border-color: var(--tsel-red);
+        }
+
+        /* Removes the sharp default bootstrap edges */
+        .tsel-pagination .page-item:first-child .page-link,
+        .tsel-pagination .page-item:last-child .page-link {
+            border-radius: 6px;
+        }
+    </style>
     <div class="container-fluid pb-5">
 
         <div class="mb-4 d-flex justify-content-between align-items-end">
@@ -103,12 +140,38 @@
         </div>
 
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-            <div class="card-header bg-white p-4 border-bottom-0 d-flex justify-content-between align-items-center">
+            <div
+                class="card-header bg-white p-4 border-bottom-0 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                 <h5 class="fw-bold text-dark mb-0">Recent Activity</h5>
-                <a href="{{ Auth::user()->role !== 'user' ? route('admin.proposals.index') : route('proposals.index') }}"
-                    class="btn btn-sm btn-outline-secondary rounded-pill fw-semibold">
-                    View All <i class="bi bi-arrow-right ms-1"></i>
-                </a>
+
+                <form action="{{ route('home') }}" method="GET" class="d-flex gap-2 align-items-center m-0">
+
+                    <select name="per_page" class="form-select form-select-sm shadow-sm bg-light"
+                        onchange="this.form.submit()" style="width: 70px;">
+                        <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
+                        <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                    </select>
+                    <span class="text-muted fs-7 me-2 fw-semibold">entries</span>
+
+                    <select name="status" class="form-select form-select-sm shadow-sm bg-light"
+                        onchange="this.form.submit()" style="width: auto;">
+                        <option value="">All Statuses</option>
+                        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="under_review" {{ request('status') === 'under_review' ? 'selected' : '' }}>Reviewing
+                        </option>
+                        <option value="need_revision" {{ request('status') === 'need_revision' ? 'selected' : '' }}>
+                            Revision</option>
+                        <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                    </select>
+
+                    <a href="{{ Auth::user()->role !== 'user' ? route('admin.proposals.index') : route('proposals.index') }}"
+                        class="btn btn-sm btn-outline-dark rounded-pill fw-semibold ms-1 text-nowrap">
+                        View All <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </form>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -164,6 +227,12 @@
                 </table>
             </div>
         </div>
+        @if ($recent_proposals->hasPages())
+            <div class="card-footer bg-white p-4 border-top border-light tsel-pagination">
+                {{ $recent_proposals->links('pagination::bootstrap-5') }}
+            </div>
+        @endif
+    </div>
 
     </div>
 @endsection

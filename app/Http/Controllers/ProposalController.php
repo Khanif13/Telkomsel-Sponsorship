@@ -8,9 +8,28 @@ use Illuminate\Support\Facades\Storage;
 
 class ProposalController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $proposals = auth()->user()->proposals()->latest()->paginate(10);
+        $query = auth()->user()->proposals()->latest();
+
+        // 1. Search Filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('event_name', 'like', "%{$search}%")
+                    ->orWhere('organizer', 'like', "%{$search}%");
+            });
+        }
+
+        // 2. Status Filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // 3. Dynamic Pagination (Default to 10)
+        $perPage = $request->input('per_page', 10);
+
+        $proposals = $query->paginate($perPage)->withQueryString();
 
         return view('proposals.index', compact('proposals'));
     }

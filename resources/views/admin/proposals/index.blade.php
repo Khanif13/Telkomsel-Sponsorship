@@ -16,6 +16,51 @@
             <h5 class="fw-bold text-dark mb-0">Proposal Yang Diajukan</h5>
         </div>
 
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-body p-4">
+                <form action="{{ url()->current() }}" method="GET" class="row g-3 align-items-center">
+
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0 text-muted">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" name="search" class="form-control border-start-0 ps-0"
+                                placeholder="Search event or organizer..." value="{{ request('search') }}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <select name="status" class="form-select text-secondary">
+                            <option value="">All Statuses</option>
+                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="under_review" {{ request('status') === 'under_review' ? 'selected' : '' }}>Under
+                                Review</option>
+                            <option value="need_revision" {{ request('status') === 'need_revision' ? 'selected' : '' }}>
+                                Needs Revision</option>
+                            <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved
+                            </option>
+                            <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-danger fw-bold w-100 shadow-sm">
+                            Filter
+                        </button>
+                        @if (request()->has('search') || request()->has('status'))
+                            <a href="{{ url()->current() }}" class="btn btn-outline-secondary fw-bold shadow-sm"
+                                title="Clear Filters">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        @endif
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">

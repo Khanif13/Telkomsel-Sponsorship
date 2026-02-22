@@ -9,10 +9,26 @@ use Illuminate\Http\Request;
 class ProposalReviewController extends Controller
 {
     // Menampilkan semua proposal yang masuk ke sistem
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        // Eager load 'user' untuk mencegah N+1 Query problem
-        $proposals = Proposal::with('user')->latest()->paginate(15);
+        // Start the query for ALL proposals, eager loading the user
+        $query = \App\Models\Proposal::with('user')->latest();
+
+        // 1. Search Filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('event_name', 'like', "%{$search}%")
+                    ->orWhere('organizer', 'like', "%{$search}%");
+            });
+        }
+
+        // 2. Status Filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $proposals = $query->paginate(10)->withQueryString();
 
         return view('admin.proposals.index', compact('proposals'));
     }
