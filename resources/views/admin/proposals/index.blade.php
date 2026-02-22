@@ -13,7 +13,7 @@
         @endif
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold text-dark mb-0">Incoming Proposals Pipeline</h5>
+            <h5 class="fw-bold text-dark mb-0">Proposal Yang Diajukan</h5>
         </div>
 
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">

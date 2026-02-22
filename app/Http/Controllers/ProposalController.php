@@ -50,7 +50,7 @@ class ProposalController extends Controller
 
             // Summary
             'description' => 'required|string|min:50',
-            'proposal_file' => 'required|mimes:pdf|max:5120',
+            'proposal_file' => 'required|mimes:pdf|max:10240',
         ]);
 
         if ($request->hasFile('proposal_file')) {

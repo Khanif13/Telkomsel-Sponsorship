@@ -17,8 +17,19 @@ class CmsController extends Controller
 
     public function update(Request $request)
     {
-        foreach ($request->settings as $key => $value) {
-            Setting::where('key', $key)->update(['value' => $value]);
+        // 1. Grab the array safely using Laravel's input helper
+        $settings = $request->input('settings', []);
+
+        // 2. Loop through and update explicitly
+        foreach ($settings as $key => $value) {
+            // Find the specific setting row
+            $setting = Setting::where('key', $key)->first();
+
+            // If it exists in the database, update and save it
+            if ($setting) {
+                $setting->value = $value;
+                $setting->save();
+            }
         }
 
         return back()->with('success', 'Landing page content updated successfully.');

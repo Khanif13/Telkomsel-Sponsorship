@@ -7,7 +7,7 @@
 
         <div class="mb-4 d-flex justify-content-between align-items-end">
             <div>
-                <h3 class="fw-bolder mb-1" style="color: var(--tsel-dark-blue);">Welcome back,
+                <h3 class="fw-bolder mb-1" style="color: var(--tsel-dark-blue);">Selamat Datang Kembali,
                     {{ explode(' ', Auth::user()->name)[0] }}! 👋</h3>
                 <p class="text-muted fs-6 mb-0">
                     @if (Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')

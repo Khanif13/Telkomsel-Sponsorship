@@ -2,12 +2,16 @@
 
 use App\Http\Controllers\Admin\ProposalReviewController;
 use App\Http\Controllers\ProposalController;
+use App\Http\Controllers\SuperAdmin\CmsController;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $settings = Setting::pluck('value', 'key')->toArray();
+
+    return view('welcome', compact('settings'));
 });
 
 Auth::routes();
@@ -38,6 +42,6 @@ Route::middleware(['auth', 'role:super_admin'])->prefix('superadmin')->name('sup
     Route::patch('/users/{user}/status', [UserManagementController::class, 'toggleStatus'])->name('users.toggle-status');
 
     // Landing Page CMS
-    Route::get('/cms', [App\Http\Controllers\SuperAdmin\CmsController::class, 'index'])->name('cms.index');
-    Route::post('/cms/update', [App\Http\Controllers\SuperAdmin\CmsController::class, 'update'])->name('cms.update');
+    Route::get('/cms', [CmsController::class, 'index'])->name('cms.index');
+    Route::patch('/superadmin/cms/update', [CmsController::class, 'update'])->name('superadmin.cms.update');
 });
