@@ -1,5 +1,4 @@
 @extends('layouts.dashboard')
-
 @section('page_title', 'Review All Submissions')
 
 @section('content')
@@ -12,57 +11,10 @@
             </div>
         @endif
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold text-dark mb-0">Proposal Yang Diajukan</h5>
-        </div>
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+            <x-filter-bar title="Proposal Yang Diajukan" />
 
-        <div class="card border-0 shadow-sm rounded-4 mb-4">
-            <div class="card-body p-4">
-                <form action="{{ url()->current() }}" method="GET" class="row g-3 align-items-center">
-
-                    <div class="col-md-5">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0 text-muted">
-                                <i class="bi bi-search"></i>
-                            </span>
-                            <input type="text" name="search" class="form-control border-start-0 ps-0"
-                                placeholder="Search event or organizer..." value="{{ request('search') }}">
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <select name="status" class="form-select text-secondary">
-                            <option value="">All Statuses</option>
-                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
-                            <option value="under_review" {{ request('status') === 'under_review' ? 'selected' : '' }}>Under
-                                Review</option>
-                            <option value="need_revision" {{ request('status') === 'need_revision' ? 'selected' : '' }}>
-                                Needs Revision</option>
-                            <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved
-                            </option>
-                            <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-3 d-flex gap-2">
-                        <button type="submit" class="btn btn-danger fw-bold w-100 shadow-sm">
-                            Filter
-                        </button>
-                        @if (request()->has('search') || request()->has('status'))
-                            <a href="{{ url()->current() }}" class="btn btn-outline-secondary fw-bold shadow-sm"
-                                title="Clear Filters">
-                                <i class="bi bi-x-lg"></i>
-                            </a>
-                        @endif
-                    </div>
-
-                </form>
-            </div>
-        </div>
-
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-            <div class="table-responsive">
+            <div class="table-responsive" style="min-height: 320px; overflow-y: visible;">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light text-muted">
                         <tr>
@@ -90,16 +42,7 @@
                                     {{ $proposal->created_at->format('d M Y, H:i') }}
                                 </td>
                                 <td class="py-3">
-                                    @if ($proposal->status === 'pending')
-                                        <span
-                                            class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm">Pending</span>
-                                    @elseif($proposal->status === 'under_review')
-                                        <span class="badge bg-info px-3 py-2 rounded-pill shadow-sm">Under Review</span>
-                                    @elseif($proposal->status === 'approved')
-                                        <span class="badge bg-success px-3 py-2 rounded-pill shadow-sm">Approved</span>
-                                    @else
-                                        <span class="badge bg-danger px-3 py-2 rounded-pill shadow-sm">Rejected</span>
-                                    @endif
+                                    <x-status-badge :status="$proposal->status" />
                                 </td>
                                 <td class="pe-4 py-3 text-end">
                                     <div class="btn-group shadow-sm rounded-pill">
@@ -139,7 +82,7 @@
                 </table>
             </div>
             @if ($proposals->hasPages())
-                <div class="card-footer bg-white py-3 px-4 border-0">
+                <div class="card-footer bg-white py-4 px-4 border-top border-light tsel-pagination">
                     {{ $proposals->links('pagination::bootstrap-5') }}
                 </div>
             @endif

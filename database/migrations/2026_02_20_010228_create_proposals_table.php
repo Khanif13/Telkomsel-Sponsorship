@@ -39,7 +39,7 @@ return new class extends Migration
             $table->string('proposal_file');
 
             // 6. Status
-            $table->enum('status', ['pending', 'under_review', 'approved', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'under_review', 'need_revision', 'approved', 'rejected'])->default('pending');
 
             $table->timestamps();
         });

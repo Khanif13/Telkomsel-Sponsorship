@@ -1,45 +1,7 @@
 @extends('layouts.dashboard')
-
 @section('page_title', 'Overview')
 
 @section('content')
-    <style>
-        .tsel-pagination nav>div.d-sm-flex {
-            align-items: center;
-        }
-
-        .tsel-pagination p.text-muted {
-            margin-bottom: 0;
-            font-weight: 500;
-        }
-
-        .tsel-pagination .page-item.active .page-link {
-            background-color: var(--tsel-red);
-            border-color: var(--tsel-red);
-            color: white;
-            border-radius: 6px;
-        }
-
-        .tsel-pagination .page-link {
-            color: var(--tsel-dark-blue);
-            border-radius: 6px;
-            margin: 0 3px;
-            font-weight: 600;
-            border: 1px solid #eaeaea;
-        }
-
-        .tsel-pagination .page-link:hover {
-            background-color: #fce8e9;
-            color: var(--tsel-red);
-            border-color: var(--tsel-red);
-        }
-
-        /* Removes the sharp default bootstrap edges */
-        .tsel-pagination .page-item:first-child .page-link,
-        .tsel-pagination .page-item:last-child .page-link {
-            border-radius: 6px;
-        }
-    </style>
     <div class="container-fluid pb-5">
 
         <div class="mb-4 d-flex justify-content-between align-items-end">
@@ -64,7 +26,6 @@
         </div>
 
         <div class="row row-cols-1 row-cols-md-3 row-cols-xl-6 g-4 mb-5">
-
             <div class="col">
                 <div class="card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden">
                     <div class="card-body p-3">
@@ -136,16 +97,13 @@
                     <div class="position-absolute bottom-0 start-0 w-100 bg-danger" style="height: 4px;"></div>
                 </div>
             </div>
-
         </div>
 
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
             <div
                 class="card-header bg-white p-4 border-bottom-0 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                 <h5 class="fw-bold text-dark mb-0">Recent Activity</h5>
-
                 <form action="{{ route('home') }}" method="GET" class="d-flex gap-2 align-items-center m-0">
-
                     <select name="per_page" class="form-select form-select-sm shadow-sm bg-light"
                         onchange="this.form.submit()" style="width: 70px;">
                         <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>
@@ -154,7 +112,6 @@
                         <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
                     </select>
                     <span class="text-muted fs-7 me-2 fw-semibold">entries</span>
-
                     <select name="status" class="form-select form-select-sm shadow-sm bg-light"
                         onchange="this.form.submit()" style="width: auto;">
                         <option value="">All Statuses</option>
@@ -200,19 +157,7 @@
                                     {{ $proposal->created_at->format('d M Y') }}
                                 </td>
                                 <td class="pe-4 py-3 text-end">
-                                    @if ($proposal->status === 'pending')
-                                        <span
-                                            class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm">Pending</span>
-                                    @elseif($proposal->status === 'under_review')
-                                        <span class="badge bg-info px-3 py-2 rounded-pill shadow-sm">Under Review</span>
-                                    @elseif($proposal->status === 'need_revision')
-                                        <span
-                                            class="badge bg-dark text-white px-3 py-2 rounded-pill shadow-sm">Revision</span>
-                                    @elseif($proposal->status === 'approved')
-                                        <span class="badge bg-success px-3 py-2 rounded-pill shadow-sm">Approved</span>
-                                    @else
-                                        <span class="badge bg-danger px-3 py-2 rounded-pill shadow-sm">Rejected</span>
-                                    @endif
+                                    <x-status-badge :status="$proposal->status" />
                                 </td>
                             </tr>
                         @empty
@@ -226,13 +171,11 @@
                     </tbody>
                 </table>
             </div>
+            @if ($recent_proposals->hasPages())
+                <div class="card-footer bg-white p-4 border-top border-light tsel-pagination">
+                    {{ $recent_proposals->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
         </div>
-        @if ($recent_proposals->hasPages())
-            <div class="card-footer bg-white p-4 border-top border-light tsel-pagination">
-                {{ $recent_proposals->links('pagination::bootstrap-5') }}
-            </div>
-        @endif
-    </div>
-
     </div>
 @endsection
