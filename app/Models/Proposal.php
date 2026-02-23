@@ -29,6 +29,9 @@ class Proposal extends Model
         'proposal_file',
         'status',
         'admin_note',
+        'description',
+        'proposal_file',
+        'proposal_link',
     ];
 
     protected $casts = [

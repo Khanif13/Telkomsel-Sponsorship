@@ -31,7 +31,7 @@
                                 <td class="ps-4 py-3">
                                     <div class="fw-bold text-dark">{{ $proposal->event_name }}</div>
                                     <div class="text-muted small">
-                                        <i class="bi bi-person"></i> {{ $proposal->user->name }} &bull; <i
+                                        <i class="bi bi-person"></i> {{ $proposal->user->name ?? 'Unknown' }} &bull; <i
                                             class="bi bi-building"></i> {{ $proposal->organizer }}
                                     </div>
                                 </td>
@@ -60,11 +60,18 @@
                                         <ul
                                             class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4 mt-2 p-2 fs-7">
                                             <li>
-                                                <a class="dropdown-item fw-semibold py-2 rounded-3 text-secondary"
-                                                    href="{{ Storage::url($proposal->proposal_file) }}" target="_blank">
-                                                    <i class="bi bi-file-earmark-pdf text-danger me-2 fs-6"></i> Download
-                                                    PDF
-                                                </a>
+                                                @if ($proposal->proposal_file)
+                                                    <a class="dropdown-item fw-semibold py-2 rounded-3 text-secondary"
+                                                        href="{{ Storage::url($proposal->proposal_file) }}" target="_blank">
+                                                        <i class="bi bi-file-earmark-pdf text-danger me-2 fs-6"></i>
+                                                        Download PDF
+                                                    </a>
+                                                @elseif($proposal->proposal_link)
+                                                    <a class="dropdown-item fw-semibold py-2 rounded-3 text-secondary"
+                                                        href="{{ $proposal->proposal_link }}" target="_blank">
+                                                        <i class="bi bi-link-45deg text-primary me-2 fs-6"></i> Open Link
+                                                    </a>
+                                                @endif
                                             </li>
                                         </ul>
                                     </div>
@@ -81,6 +88,7 @@
                     </tbody>
                 </table>
             </div>
+
             @if ($proposals->hasPages())
                 <div class="card-footer bg-white py-4 px-4 border-top border-light tsel-pagination">
                     {{ $proposals->links('pagination::bootstrap-5') }}

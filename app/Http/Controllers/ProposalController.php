@@ -67,17 +67,29 @@ class ProposalController extends Controller
             'packages.*.exposure' => 'required_with:packages|string',
             'packages.*.slots' => 'required_with:packages|string',
 
-            // Summary
-            'description' => 'required|string|min:50',
-            'proposal_file' => 'required|mimes:pdf|max:10240',
+            // Summary (Optional)
+            'description' => 'nullable|string',
+
+            // Document: User must provide EITHER a file OR a link
+            'proposal_file' => 'required_without:proposal_link|mimes:pdf|max:10240',
+            'proposal_link' => 'required_without:proposal_file|nullable|url',
         ]);
 
+        // Ambil semua data yang sudah divalidasi
+        $data = $validated;
+
+        // Jika user memilih opsi Upload PDF
         if ($request->hasFile('proposal_file')) {
-            $filePath = $request->file('proposal_file')->store('proposals', 'public');
-            $validated['proposal_file'] = $filePath;
+            $data['proposal_file'] = $request->file('proposal_file')->store('proposals', 'public');
+            $data['proposal_link'] = null; // Kosongkan link jika ada file
+        }
+        // Jika user memilih opsi Link Google Docs
+        elseif ($request->filled('proposal_link')) {
+            $data['proposal_file'] = null; // Kosongkan file jika ada link
         }
 
-        $request->user()->proposals()->create($validated);
+        // CARA BENAR: Simpan proposal dan otomatis kaitkan dengan user_id yang sedang login
+        $request->user()->proposals()->create($data);
 
         return redirect()->route('proposals.index')->with('success', 'Enterprise Sponsorship Proposal submitted successfully.');
     }
@@ -140,8 +152,13 @@ class ProposalController extends Controller
             'packages.*.benefits' => 'required_with:packages|string',
             'packages.*.exposure' => 'required_with:packages|string',
             'packages.*.slots' => 'required_with:packages|string',
-            'description' => 'required|string|min:50',
-            'proposal_file' => 'nullable|mimes:pdf|max:5120',
+
+            // Summary (Now Optional)
+            'description' => 'nullable|string',
+
+            // Document: User must provide EITHER a file OR a link
+            'proposal_file' => 'required_without:proposal_link|mimes:pdf|max:10240',
+            'proposal_link' => 'required_without:proposal_file|nullable|url',
         ]);
 
         if ($request->hasFile('proposal_file')) {
@@ -151,6 +168,14 @@ class ProposalController extends Controller
             }
             $filePath = $request->file('proposal_file')->store('proposals', 'public');
             $validated['proposal_file'] = $filePath;
+            // Clear the link if a file is uploaded
+            $validated['proposal_link'] = null;
+        } elseif ($request->filled('proposal_link')) {
+            // Clear the file if a link is provided and no new file is uploaded
+            if ($proposal->proposal_file) {
+                Storage::disk('public')->delete($proposal->proposal_file);
+            }
+            $validated['proposal_file'] = null;
         }
 
         // RESET STATUS TO PENDING: Moves the proposal back into the admin queue

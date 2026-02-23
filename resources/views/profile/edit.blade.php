@@ -1,64 +1,114 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.dashboard')
+@section('page_title', 'Account Settings')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OTP Verification - {{ config('app.name', 'SponsorHub') }}</title>
+@section('content')
+    <div class="container-fluid pb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-</head>
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm border-0 mb-4"
+                        role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
 
-<body>
-    <div class="auth-wrapper">
-        <div class="auth-card text-center">
+                <form action="{{ route('profile.update') }}" method="POST">
+                    @csrf
+                    @method('PATCH')
 
-            <a href="/" class="text-decoration-none d-inline-flex align-items-center gap-2 mb-4">
-                <img src="{{ asset('images/logo-telkomsel.png') }}" alt="Telkomsel" height="32"
-                    style="object-fit: contain; mix-blend-mode: multiply;">
-                <span class="border-start border-secondary border-opacity-25 ps-2 ms-1 fw-bolder fs-4"
-                    style="color: var(--tsel-dark-blue); letter-spacing: -0.5px;">
-                    SponsorHub<span class="text-danger">.</span>
-                </span>
-            </a>
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-header bg-white p-4 border-bottom-0 rounded-top-4">
+                            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-circle text-danger me-2"></i> Basic
+                                Information</h5>
+                        </div>
+                        <div class="card-body p-4 pt-0">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted fs-7 text-uppercase">Telkomsel
+                                        Number</label>
+                                    <input type="text" class="form-control bg-light text-muted"
+                                        value="{{ $user->phone_number }}" readonly>
+                                    <div class="form-text fs-7">This number is used for authentication and cannot be
+                                        changed.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted fs-7 text-uppercase">Full Name (PIC)</label>
+                                    <input type="text" name="name"
+                                        class="form-control @error('name') is-invalid @enderror"
+                                        value="{{ old('name', $user->name) }}" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <h4 class="fw-bolder mb-1" style="color: var(--tsel-dark-blue);">Verify Your Code</h4>
-            <p class="text-muted fs-7 mb-4">The code has been sent to <strong>{{ session('otp_phone') }}</strong></p>
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-header bg-white p-4 border-bottom-0 rounded-top-4">
+                            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-building text-danger me-2"></i> Institution /
+                                Organizer Details</h5>
+                            <p class="text-muted fs-7 mb-0 mt-1">This data will automatically autofill your form when
+                                submitting a proposal.</p>
+                        </div>
+                        <div class="card-body p-4 pt-0">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted fs-7 text-uppercase">Organization / Company
+                                        Name</label>
+                                    <input type="text" name="organizer_name" class="form-control"
+                                        value="{{ old('organizer_name', $user->organizer_name) }}"
+                                        placeholder="e.g., Student Executive Board / Tech Corp">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted fs-7 text-uppercase">Organizer
+                                        Category</label>
+                                    <select name="organizer_category" class="form-select">
+                                        <option value="">Select Category...</option>
+                                        <option value="University / Student"
+                                            {{ $user->organizer_category == 'University / Student' ? 'selected' : '' }}>
+                                            University / Student</option>
+                                        <option value="School"
+                                            {{ $user->organizer_category == 'School' ? 'selected' : '' }}>School</option>
+                                        <option value="General Community / NGO"
+                                            {{ $user->organizer_category == 'General Community / NGO' ? 'selected' : '' }}>
+                                            General Community / NGO</option>
+                                        <option value="Government Institution"
+                                            {{ $user->organizer_category == 'Government Institution' ? 'selected' : '' }}>
+                                            Government Institution</option>
+                                        <option value="Private Company (Event Organizer)"
+                                            {{ $user->organizer_category == 'Private Company (Event Organizer)' ? 'selected' : '' }}>
+                                            Private Company (Event Organizer)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted fs-7 text-uppercase">Position /
+                                        Title</label>
+                                    <input type="text" name="position" class="form-control"
+                                        value="{{ old('position', $user->position) }}"
+                                        placeholder="e.g., Head of Committee">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold text-muted fs-7 text-uppercase">Official Email</label>
+                                    <input type="email" name="contact_email" class="form-control"
+                                        value="{{ old('contact_email', $user->contact_email) }}"
+                                        placeholder="e.g., info@organization.com">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-bold text-muted fs-7 text-uppercase">Full Address</label>
+                                    <textarea name="address" rows="3" class="form-control" placeholder="Enter the full address...">{{ old('address', $user->address) }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            @if (session('simulated_otp'))
-                <div class="alert alert-success rounded-4 border-0 shadow-sm mb-4">
-                    <div class="text-success fw-bold fs-7 mb-1 text-uppercase">💬 Simulated SMS Received:</div>
-                    <div class="fs-2 fw-bolder tracking-widest">{{ session('simulated_otp') }}</div>
-                </div>
-            @endif
+                    <div class="d-flex justify-content-end mb-5">
+                        <button type="submit" class="btn btn-danger btn-lg rounded-pill fw-bold px-5 shadow-sm">
+                            Save Changes
+                        </button>
+                    </div>
 
-            <form method="POST" action="{{ route('otp.authenticate') }}" class="text-start">
-                @csrf
-                <div class="mb-4 text-center">
-                    <label class="form-label fw-bold text-muted fs-7 text-uppercase">Enter 6-Digit OTP</label>
-                    <input type="text" name="otp"
-                        class="form-control auth-input text-center fs-4 fw-bolder shadow-none mx-auto @error('otp') is-invalid @enderror"
-                        style="letter-spacing: 5px; max-width: 250px;" placeholder="••••••" maxlength="6" required
-                        autofocus autocomplete="off">
-                    @error('otp')
-                        <span class="invalid-feedback d-block fs-7 mt-2 fw-bold">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold py-2 mb-3 shadow-sm">
-                    Verify & Sign In
-                </button>
-            </form>
-
-            <div class="mt-2">
-                <a href="{{ route('otp.login') }}" class="auth-link fs-7"><i class="bi bi-pencil-square me-1"></i>
-                    Change Number</a>
+                </form>
             </div>
-
         </div>
     </div>
-</body>
-
-</html>
+@endsection

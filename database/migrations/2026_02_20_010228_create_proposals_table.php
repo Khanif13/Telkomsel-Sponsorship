@@ -11,8 +11,6 @@ return new class extends Migration
         Schema::create('proposals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-
-            // 1. Event & Contact Information
             $table->string('event_name');
             $table->string('organizer');
             $table->string('contact_name');
@@ -24,23 +22,12 @@ return new class extends Migration
             $table->string('event_scale');
             $table->integer('expected_participants');
             $table->text('target_audience');
-
-            // 2. Sponsorship Request Logic
             $table->string('request_type');
             $table->text('support_description')->nullable();
-
-            // 3. Dynamic Packages
             $table->json('packages')->nullable();
-
-            // 4. Executive Summary
-            $table->text('description');
-
-            // 5. File Attachment
+            $table->text('description')->nullable();
             $table->string('proposal_file');
-
-            // 6. Status
             $table->enum('status', ['pending', 'under_review', 'need_revision', 'approved', 'rejected'])->default('pending');
-
             $table->timestamps();
         });
     }

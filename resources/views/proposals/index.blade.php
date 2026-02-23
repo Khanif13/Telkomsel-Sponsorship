@@ -55,20 +55,30 @@
                                             class="btn btn-sm btn-primary fw-bold px-4 rounded-start-pill">
                                             View
                                         </a>
+
                                         <button type="button"
                                             class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split rounded-end-pill px-2"
                                             data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </button>
+
                                         <ul
                                             class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4 mt-2 p-2 fs-7">
                                             <li>
-                                                <a class="dropdown-item fw-semibold py-2 rounded-3 text-secondary"
-                                                    href="{{ Storage::url($proposal->proposal_file) }}" target="_blank">
-                                                    <i class="bi bi-file-earmark-pdf text-danger me-2 fs-6"></i> Download
-                                                    PDF
-                                                </a>
+                                                @if ($proposal->proposal_file)
+                                                    <a class="dropdown-item fw-semibold py-2 rounded-3 text-secondary"
+                                                        href="{{ Storage::url($proposal->proposal_file) }}" target="_blank">
+                                                        <i class="bi bi-file-earmark-pdf text-danger me-2 fs-6"></i>
+                                                        Download PDF
+                                                    </a>
+                                                @elseif($proposal->proposal_link)
+                                                    <a class="dropdown-item fw-semibold py-2 rounded-3 text-secondary"
+                                                        href="{{ $proposal->proposal_link }}" target="_blank">
+                                                        <i class="bi bi-link-45deg text-primary me-2 fs-6"></i> Open Link
+                                                    </a>
+                                                @endif
                                             </li>
+
                                             @if (in_array($proposal->status, ['pending', 'need_revision']))
                                                 <li>
                                                     <hr class="dropdown-divider opacity-10 my-1">

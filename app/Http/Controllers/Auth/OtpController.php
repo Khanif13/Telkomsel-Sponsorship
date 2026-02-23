@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Str;
 
 class OtpController extends Controller
 {
@@ -53,29 +52,34 @@ class OtpController extends Controller
         $phone = session('otp_phone');
         $cachedOtp = Cache::get('otp_'.$phone);
 
-        // 5. Cek apakah OTP cocok
+        // Jika OTP benar
         if ($cachedOtp && $cachedOtp == $request->otp) {
 
-            // Jika cocok, cari user. Jika belum ada di DB, OTOMATIS buatkan akun baru!
             $user = User::firstOrCreate(
                 ['phone_number' => $phone],
                 [
-                    'name' => 'Pemohon '.$phone, // Nama dummy untuk pendaftar baru
-                    'password' => bcrypt(Str::random(16)), // Password acak tidak terpakai
+                    'name' => 'Applicant '.$phone,
+                    'password' => bcrypt(\Illuminate\Support\Str::random(16)),
                     'role' => 'user',
                 ]
             );
 
-            // Masuk (Login)
             Auth::login($user);
 
-            // Bersihkan jejak OTP demi keamanan
+            // FIX: Regenerate session agar login benar-benar tersimpan dan tidak terlempar saat klik Settings
+            $request->session()->regenerate();
+
             Cache::forget('otp_'.$phone);
             session()->forget('otp_phone');
 
             return redirect()->route('home');
         }
 
-        return back()->withErrors(['otp' => 'Kode OTP salah atau sudah kedaluwarsa!']);
+        // FIX: Jika salah ketik, flash/tampilkan kembali OTP-nya ke layar agar tidak hilang (Khusus untuk prototype)
+        if ($cachedOtp) {
+            session()->flash('simulated_otp', $cachedOtp);
+        }
+
+        return back()->withErrors(['otp' => 'The OTP code is invalid or has expired.']);
     }
 }

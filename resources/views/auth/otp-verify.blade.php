@@ -52,9 +52,21 @@
                 </button>
             </form>
 
-            <div class="mt-2">
-                <a href="{{ route('otp.login') }}" class="auth-link fs-7"><i class="bi bi-pencil-square me-1"></i>
-                    Change Number</a>
+            <div class="mt-3 d-flex justify-content-center align-items-center gap-3 fs-7">
+                <a href="{{ route('otp.login') }}" class="auth-link text-muted text-decoration-none">
+                    <i class="bi bi-pencil-square me-1"></i> Change Number
+                </a>
+
+                <span class="text-muted opacity-50">|</span>
+
+                <form method="POST" action="{{ route('otp.generate') }}" class="m-0 p-0">
+                    @csrf
+                    <input type="hidden" name="phone_number" value="{{ session('otp_phone') }}">
+                    <button type="submit" class="btn btn-link auth-link p-0 fw-bold text-decoration-none shadow-none"
+                        style="font-size: inherit;">
+                        <i class="bi bi-arrow-clockwise me-1"></i> Resend Code
+                    </button>
+                </form>
             </div>
 
         </div>

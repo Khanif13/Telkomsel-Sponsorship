@@ -45,7 +45,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-danger w-100 rounded-pill fw-bold py-2 mb-4 shadow-sm">
-                    Send OTP Code <i class="bi bi-arrow-right ms-1"></i>
+                    Send OTP Code
                 </button>
 
                 <div class="text-center fs-7 text-muted fw-medium">
