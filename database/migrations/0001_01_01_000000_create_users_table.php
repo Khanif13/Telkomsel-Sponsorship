@@ -14,12 +14,10 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('phone_number')->unique();
+            // $table->string('email')->unique();
+            // $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-
-            // --- ADD THIS LINE FOR RBAC ---
-            // By default, anyone who registers is a standard 'user'
             $table->enum('role', ['user', 'admin', 'super_admin'])->default('user');
 
             $table->rememberToken();

@@ -35,8 +35,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-semibold">Organizer / Institution *</label>
-                                <input type="text" name="organizer" class="form-control" value="{{ old('organizer') }}"
-                                    required>
+                                <input type="text" name="organizer" class="form-control"
+                                    value="{{ old('organizer', Auth::user()->organizer_name) }}" required>
                             </div>
 
                             <div class="col-12 mt-4">
@@ -45,17 +45,18 @@
                             <div class="col-md-4 mt-0">
                                 <label class="form-label fw-semibold fs-7 text-muted">Full Name *</label>
                                 <input type="text" name="contact_name" class="form-control"
-                                    value="{{ old('contact_name') }}" required>
+                                    value="{{ old('contact_name', Auth::user()->name) }}" required>
                             </div>
                             <div class="col-md-4 mt-0">
                                 <label class="form-label fw-semibold fs-7 text-muted">Email Address *</label>
                                 <input type="email" name="contact_email" class="form-control"
-                                    value="{{ old('contact_email') }}" required>
+                                    value="{{ old('contact_email', Auth::user()->contact_email) }}" required>
                             </div>
                             <div class="col-md-4 mt-0">
                                 <label class="form-label fw-semibold fs-7 text-muted">Phone / WhatsApp *</label>
                                 <input type="text" name="contact_phone" class="form-control"
-                                    value="{{ old('contact_phone') }}" placeholder="e.g. +62812..." required>
+                                    value="{{ old('contact_phone', Auth::user()->phone_number) }}"
+                                    placeholder="e.g. 0812..." required>
                             </div>
 
                             <div class="col-12 mt-4">
@@ -162,7 +163,7 @@
                                 <div class="bg-light p-3 rounded-3 border">
                                     <label class="form-label fw-semibold text-primary">Support Needed Description *</label>
                                     <textarea name="support_description" id="support_description" class="form-control" rows="2"
-                                        placeholder="Specify exactly what product, media, or internet support you need..."></textarea>
+                                        placeholder="Specify exactly what product, media, or internet support you need...">{{ old('support_description') }}</textarea>
                                 </div>
                             </div>
                         </div>

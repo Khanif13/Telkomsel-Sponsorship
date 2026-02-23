@@ -31,17 +31,16 @@
                 @csrf
 
                 <div class="mb-3">
-                    <label for="email" class="form-label fw-semibold fs-7 text-muted mb-1">Email Address</label>
-                    <div class="position-relative">
-                        <i class="bi bi-envelope position-absolute top-50 translate-middle-y text-muted ms-3"></i>
-                        <input id="email" type="email"
-                            class="form-control auth-input ps-5 @error('email') is-invalid @enderror" name="email"
-                            value="{{ old('email') }}" required autocomplete="email" autofocus
-                            placeholder="Enter your email">
-                    </div>
-                    @error('email')
-                        <span class="invalid-feedback d-block fs-7"
-                            role="alert"><strong>{{ $message }}</strong></span>
+                    <label for="phone_number" class="form-label fw-bold text-muted fs-7 text-uppercase">Nomor
+                        Telkomsel</label>
+                    <input id="phone_number" type="text"
+                        class="form-control auth-input @error('phone_number') is-invalid @enderror" name="phone_number"
+                        value="{{ old('phone_number') }}" required autofocus placeholder="Contoh: 081234567890">
+
+                    @error('phone_number')
+                        <span class="invalid-feedback fw-bold" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
                     @enderror
                 </div>
 
