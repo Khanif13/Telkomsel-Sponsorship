@@ -31,19 +31,18 @@
                 @csrf
 
                 <div class="mb-3">
-                    <label for="email" class="form-label fw-semibold fs-7 text-muted mb-1">Email Address</label>
+                    <label for="login" class="form-label fw-semibold fs-7 text-muted mb-1">Email / Username</label>
                     <div class="position-relative">
-                        <i class="bi bi-envelope position-absolute top-50 translate-middle-y text-muted ms-3"></i>
-                        <input id="email" type="email"
-                            class="form-control auth-input ps-5 @error('email') is-invalid @enderror" name="email"
-                            value="{{ old('email') }}" required autocomplete="email" autofocus
-                            placeholder="Enter your email">
+                        <i class="bi bi-person position-absolute top-50 translate-middle-y text-muted ms-3"></i>
+                        <input id="login" type="text"
+                            class="form-control auth-input ps-5 @error('login') is-invalid @enderror" name="login"
+                            value="{{ old('login') }}" required autofocus placeholder="Masukkan Email atau Username">
                     </div>
-                    @error('email')
+                    @error('login')
                         <span class="invalid-feedback d-block fs-7"
                             role="alert"><strong>{{ $message }}</strong></span>
                     @enderror
-                </div>
+                </div>  
 
                 <div class="mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-1">
