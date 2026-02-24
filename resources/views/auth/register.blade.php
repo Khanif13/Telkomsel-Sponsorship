@@ -60,6 +60,22 @@
                     @enderror
                 </div>
 
+                <div class="mb-3">
+                    <label for="phone_number" class="form-label fw-semibold fs-7 text-muted mb-1">Phone Number
+                        (Telkomsel)</label>
+                    <div class="position-relative">
+                        <i class="bi bi-phone position-absolute top-50 translate-middle-y text-muted ms-3"></i>
+                        <input id="phone_number" type="text"
+                            class="form-control auth-input ps-5 @error('phone_number') is-invalid @enderror"
+                            name="phone_number" value="{{ old('phone_number') }}" required
+                            placeholder="Example: 081234567890">
+                    </div>
+                    @error('phone_number')
+                        <span class="invalid-feedback d-block fs-7"
+                            role="alert"><strong>{{ $message }}</strong></span>
+                    @enderror
+                </div>
+
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label for="password" class="form-label fw-semibold fs-7 text-muted mb-1">Password</label>
