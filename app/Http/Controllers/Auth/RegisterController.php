@@ -60,7 +60,7 @@ class RegisterController extends Controller
                         $prefix = $matches[1];
                         $validPrefixes = ['811', '812', '813', '821', '822', '823', '851', '852', '853'];
                         if (! in_array($prefix, $validPrefixes)) {
-                            $fail("{$prefix} bukan prefix nomor Telkomsel yang valid.");
+                            $fail("{$prefix} is not a Telkomsel number.");
                         }
                     } else {
                         $fail('Format nomor telepon tidak valid.');
