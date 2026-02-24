@@ -20,7 +20,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Seed Initial Landing Page Data
         $defaults = [
             'hero_title' => 'Empowering Brilliant Ideas.',
             'hero_subtitle' => 'Seamlessly submit, track, and manage sponsorship proposals.',

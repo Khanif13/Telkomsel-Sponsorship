@@ -17,11 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-
-            // --- ADD THIS LINE FOR RBAC ---
-            // By default, anyone who registers is a standard 'user'
             $table->enum('role', ['user', 'admin', 'super_admin'])->default('user');
-
             $table->rememberToken();
             $table->timestamps();
         });
