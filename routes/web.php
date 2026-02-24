@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ProposalReviewController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProposalController;
 use App\Http\Controllers\SuperAdmin\CmsController;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
@@ -21,9 +22,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // APPLICANT ROUTES
 Route::middleware(['auth'])->group(function () {
     Route::resource('proposals', ProposalController::class);
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-// ADMIN ROUTES (Protected by Auth AND Role middleware)
+// ADMIN ROUTES
 Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/proposals', [ProposalReviewController::class, 'index'])->name('proposals.index');
     Route::get('/proposals/{proposal}', [ProposalReviewController::class, 'show'])->name('proposals.show');
@@ -32,8 +35,6 @@ Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->name('ad
 
 // SUPER ADMIN ONLY
 Route::middleware(['auth', 'role:super_admin'])->prefix('superadmin')->name('superadmin.')->group(function () {
-
-    // FIXED: Point this to the DashboardController, NOT UserManagement
     Route::get('/dashboard', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'index'])->name('dashboard');
 
     // User & Role Management

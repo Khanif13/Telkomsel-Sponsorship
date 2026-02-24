@@ -63,7 +63,7 @@ class RegisterController extends Controller
                             $fail("{$prefix} is not a Telkomsel number.");
                         }
                     } else {
-                        $fail('Format nomor telepon tidak valid.');
+                        $fail('The phone number format is invalid.');
                     }
                 },
             ],
