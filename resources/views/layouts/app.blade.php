@@ -13,6 +13,10 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    
+    <!-- Icon -->
+    <link rel="icon" href="{{ url('https://assets.telkomsel.com/public/app-logo/2021-06/telkomsel-logo.png') }}"
+        type="image/svg">
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
