@@ -109,9 +109,10 @@
 
                     <div class="d-flex flex-column text-start me-1">
                         <span class="fw-bold lh-1"
-                            style="font-size: 0.9rem; color: var(--tsel-dark-blue);">{{ Auth::user()->name }}</span>
+                            style="font-size: 0.9rem; color: var(--tsel-dark-blue);">{{ Auth::user()->username }}</span>
+
                         <span class="text-muted text-capitalize mt-1" style="font-size: 0.75rem;">
-                            {{ Auth::user()->role_label }}
+                            {{ Auth::user()->name }}
                         </span>
                     </div>
                 </a>
