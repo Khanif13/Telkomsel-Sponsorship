@@ -1,90 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>SponsorHub | {{ $settings['hero_title'] ?? 'Official Portal' }}</title>
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    
-    <!-- Icon -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <link rel="icon" href="{{ url('https://assets.telkomsel.com/public/app-logo/2021-06/telkomsel-logo.png') }}"
         type="image/svg">
 
-    <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+<body class="bg-white">
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+    <nav class="navbar navbar-expand-lg tsel-navbar fixed-top py-3">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <img src="{{ asset('images/logo-telkomsel.png') }}" alt="Telkomsel" height="32"
+                    style="object-fit: contain; mix-blend-mode: multiply;">
+                <span class="border-start border-secondary border-opacity-25 ps-2 ms-1 fw-bolder fs-4"
+                    style="color: var(--tsel-dark-blue); letter-spacing: -0.5px;">
+                    SponsorHub<span class="text-danger">.</span>
+                </span>
+            </a>
 
-                    </ul>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-3">
+                    @if (Route::has('login'))
+                        @auth
+                            <li class="nav-item">
+                                <a href="{{ url('/home') }}" class="btn btn-danger rounded-pill fw-bold px-4 shadow-sm">
+                                    Go to Dashboard <i class="bi bi-arrow-right ms-1"></i>
+                                </a>
+                            </li>
+                        @else
+                            <li class="nav-item">
+                                <a href="{{ route('login') }}" class="nav-link fw-semibold"
+                                    style="color: var(--tsel-dark-blue);">Log In</a>
+                            </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a href="{{ route('register') }}"
+                                        class="btn btn-danger rounded-pill fw-bold px-4 shadow-sm">
+                                        Submit Proposal
+                                    </a>
                                 </li>
                             @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+                        @endauth
+                    @endif
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <main class="py-4">
-            @yield('content')
-        </main>
-    </div>
+    <main>
+        @yield('content')
+    </main>
+
+    <footer class="bg-white py-4 border-top">
+        <div class="container text-center text-muted fs-7 fw-semibold">
+            &copy; {{ date('Y') }} PT Telekomunikasi Selular. All rights reserved. <br>
+            <span class="text-black-50">This is a system prototype for demonstration purposes.</span>
+        </div>
+    </footer>
+
 </body>
 
 </html>

@@ -48,22 +48,33 @@
         <div class="row g-3 mb-4">
             <div class="col-md-6">
                 <label for="password" class="form-label fw-semibold fs-7 text-muted mb-1">Password</label>
-                <div class="position-relative d-flex align-items-center">
-                    <i class="bi bi-lock position-absolute ms-3 text-muted"></i>
+                <div class="position-relative">
+                    <i class="bi bi-lock position-absolute ms-3 text-muted top-50 translate-middle-y"></i>
                     <input id="password" type="password"
                         class="form-control auth-input ps-5 pe-5 @error('password') is-invalid @enderror" name="password"
                         required placeholder="Min. 8 chars">
+                    <button type="button"
+                        class="btn border-0 position-absolute end-0 top-50 translate-middle-y me-2 toggle-password"
+                        style="background: transparent; z-index: 10;">
+                        <i class="bi bi-eye text-muted"></i>
+                    </button>
                 </div>
                 @error('password')
                     <span class="invalid-feedback d-block fs-7"><strong>{{ $message }}</strong></span>
                 @enderror
             </div>
+
             <div class="col-md-6">
                 <label for="password-confirm" class="form-label fw-semibold fs-7 text-muted mb-1">Confirm Password</label>
-                <div class="position-relative d-flex align-items-center">
-                    <i class="bi bi-lock-fill position-absolute ms-3 text-muted"></i>
+                <div class="position-relative">
+                    <i class="bi bi-lock-fill position-absolute ms-3 text-muted top-50 translate-middle-y"></i>
                     <input id="password-confirm" type="password" class="form-control auth-input ps-5 pe-5"
                         name="password_confirmation" required placeholder="Repeat password">
+                    <button type="button"
+                        class="btn border-0 position-absolute end-0 top-50 translate-middle-y me-2 toggle-password"
+                        style="background: transparent; z-index: 10;">
+                        <i class="bi bi-eye text-muted"></i>
+                    </button>
                 </div>
             </div>
         </div>
