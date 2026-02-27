@@ -231,23 +231,63 @@
                     <div class="card-body p-4 pt-0">
                         <div class="row g-4">
                             <div class="col-12">
-                                <label class="form-label fw-semibold">Executive Summary *</label>
-                                <textarea name="description" id="description" class="form-control" rows="4" required>{{ old('description', $proposal->description) }}</textarea>
+                                <label class="form-label fw-semibold d-flex justify-content-between">
+                                    <span>Executive Summary (Optional)</span>
+                                    <span class="fs-7 text-muted">Characters: <span id="char_count"
+                                            class="text-danger fw-bold">0</span></span>
+                                </label>
+                                <textarea name="description" id="description" class="form-control" rows="4">{{ old('description', $proposal->description) }}</textarea>
                             </div>
 
-                            <div class="col-12 mt-4 p-4 bg-light rounded-3 border border-dashed text-center">
-                                <div class="mb-3">
-                                    <span class="badge bg-success mb-2 px-3 py-2 rounded-pill"><i
-                                            class="bi bi-file-earmark-pdf"></i> Current File Saved</span><br>
-                                    <a href="{{ Storage::url($proposal->proposal_file) }}" target="_blank"
-                                        class="fw-bold text-primary text-decoration-none">View Existing Proposal PDF</a>
+                            <div class="col-12 mt-4">
+                                <div class="p-4 bg-light rounded-4 border border-secondary border-opacity-25">
+                                    <label
+                                        class="form-label fw-bold text-dark fs-6 mb-3 d-block text-center border-bottom pb-3">
+                                        <i class="bi bi-cloud-arrow-up-fill text-danger me-2"></i> Update Proposal Document
+                                    </label>
+
+                                    <div class="text-center mb-4">
+                                        <span class="badge bg-success mb-2 px-3 py-2 rounded-pill"><i
+                                                class="bi bi-check-circle-fill me-1"></i> Current Document</span><br>
+                                        @if ($proposal->proposal_link)
+                                            <a href="{{ $proposal->proposal_link }}" target="_blank"
+                                                class="fw-bold text-primary text-decoration-none">
+                                                <i class="bi bi-link-45deg me-1"></i> View Attached Link
+                                            </a>
+                                        @elseif($proposal->proposal_file)
+                                            <a href="{{ Storage::url($proposal->proposal_file) }}" target="_blank"
+                                                class="fw-bold text-danger text-decoration-none">
+                                                <i class="bi bi-file-earmark-pdf me-1"></i> View Attached PDF
+                                            </a>
+                                        @else
+                                            <span class="text-muted">No document currently attached.</span>
+                                        @endif
+                                    </div>
+
+                                    <p class="text-muted fs-7 text-center mb-3">Leave both options below blank if you want
+                                        to keep the current document.</p>
+
+                                    <div class="row g-4">
+                                        <div class="col-md-6 border-end border-secondary border-opacity-25">
+                                            <label class="form-label fw-semibold fs-7 text-muted">Replace with Link (Google
+                                                Drive / Docs)</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white"><i
+                                                        class="bi bi-link-45deg"></i></span>
+                                                <input type="url" name="proposal_link" class="form-control"
+                                                    placeholder="https://docs.google.com/..."
+                                                    value="{{ old('proposal_link') }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label fw-semibold fs-7 text-muted">Replace with PDF
+                                                File</label>
+                                            <input type="file" name="proposal_file" class="form-control"
+                                                accept=".pdf">
+                                        </div>
+                                    </div>
                                 </div>
-                                <hr class="opacity-25 w-50 mx-auto">
-                                <label class="form-label fw-bold text-danger fs-6 d-block mt-3">Upload New PDF (Only if you
-                                    want to replace the current one)</label>
-                                <input type="file" name="proposal_file"
-                                    class="form-control form-control-lg mx-auto mt-2" accept=".pdf"
-                                    style="max-width: 500px;">
                             </div>
                         </div>
                     </div>
@@ -263,29 +303,6 @@
         </div>
     </div>
 @endsection
-
 @push('scripts')
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const requestTypeSelect = document.getElementById('request_type');
-            const otherFields = document.getElementById('other_support_fields');
-            const packagesSection = document.getElementById('packages_section');
-            const stepNumber = document.getElementById('final_step_number');
-
-            function toggleFields() {
-                if (requestTypeSelect.value === 'Fresh Money Funding') {
-                    packagesSection.classList.remove('d-none');
-                    otherFields.classList.add('d-none');
-                    stepNumber.innerText = '4';
-                } else {
-                    packagesSection.classList.add('d-none');
-                    otherFields.classList.remove('d-none');
-                    stepNumber.innerText = '3';
-                }
-            }
-
-            toggleFields();
-            requestTypeSelect.addEventListener('change', toggleFields);
-        });
-    </script>
+    <script src="{{ asset('js/proposal-form.js') }}"></script>
 @endpush

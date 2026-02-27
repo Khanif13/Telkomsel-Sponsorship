@@ -99,50 +99,69 @@ class ProposalController extends Controller
 
     public function update(Request $request, Proposal $proposal)
     {
-        // Security & Lockdown Checks
-        if ($proposal->user_id !== auth()->id() || ! in_array($proposal->status, ['pending', 'need_revision'])) {
-            abort(403);
+        // 1. Authorization Check
+        if ($proposal->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
         }
 
+        // 2. Validation
         $validated = $request->validate([
             'event_name' => 'required|string|max:255',
             'organizer' => 'required|string|max:255',
             'contact_name' => 'required|string|max:255',
             'contact_email' => 'required|email|max:255',
-            'contact_phone' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'event_date' => 'required|date|after:today',
+            'contact_phone' => 'required|string|max:20',
             'event_category' => 'required|string',
             'event_scale' => 'required|string',
+            'event_date' => 'required|date',
+            'location' => 'required|string|max:255',
             'expected_participants' => 'required|integer|min:1',
             'target_audience' => 'required|string',
             'request_type' => 'required|string',
-            'support_description' => 'nullable|required_unless:request_type,Fresh Money Funding|string',
-            'packages' => 'exclude_unless:request_type,Fresh Money Funding|required|array|min:1',
-            'packages.*.name' => 'required_with:packages|string|max:255',
-            'packages.*.price' => 'nullable|numeric|min:0',
-            'packages.*.benefits' => 'required_with:packages|string',
-            'packages.*.exposure' => 'required_with:packages|string',
-            'packages.*.slots' => 'required_with:packages|string',
-            'description' => 'required|string|min:50',
-            'proposal_file' => 'nullable|mimes:pdf|max:5120',
+            'support_description' => 'nullable|string',
+            'packages' => 'nullable|array',
+            'description' => 'nullable|string', // Optional Executive Summary
+
+            // Allow both to be nullable during update. If user uploads a new one, handle it.
+            'proposal_file' => 'nullable|mimes:pdf|max:10240',
+            'proposal_link' => 'nullable|url',
         ]);
 
+        $data = $validated;
+
+        // 3. Handle Document Updates
         if ($request->hasFile('proposal_file')) {
-            // Delete old file to save space
+            // Delete old file if exists
             if ($proposal->proposal_file) {
-                Storage::disk('public')->delete($proposal->proposal_file);
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($proposal->proposal_file);
             }
-            $filePath = $request->file('proposal_file')->store('proposals', 'public');
-            $validated['proposal_file'] = $filePath;
+            $data['proposal_file'] = $request->file('proposal_file')->store('proposals', 'public');
+            $data['proposal_link'] = null; // Clear link if new file uploaded
+        } elseif ($request->filled('proposal_link')) {
+            // Delete old file if exists since they are switching to a link
+            if ($proposal->proposal_file) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($proposal->proposal_file);
+            }
+            $data['proposal_file'] = null; // Clear file path
+            $data['proposal_link'] = $request->proposal_link;
+        } else {
+            // If neither is provided in the request, keep the existing ones
+            // Remove them from the $data array so they don't overwrite with null
+            unset($data['proposal_file']);
+            unset($data['proposal_link']);
         }
 
-        // RESET STATUS TO PENDING: Moves the proposal back into the admin queue
-        $validated['status'] = 'pending';
+        // 4. Handle JSON Packages
+        if ($request->request_type === 'Fresh Money Funding' && isset($validated['packages'])) {
+            $data['packages'] = json_encode($validated['packages']);
+        } else {
+            $data['packages'] = null;
+        }
 
-        $proposal->update($validated);
+        // 5. Update Record
+        $proposal->update($data);
 
-        return redirect()->route('proposals.index')->with('success', 'Proposal updated and resubmitted for review.');
+        return redirect()->route('proposals.index')->with('success', 'Proposal updated successfully.');
     }
 
     public function destroy(Proposal $proposal)
