@@ -27,6 +27,7 @@ class Proposal extends Model
         'support_description',
         'packages',
         'proposal_file',
+        'proposal_link',
         'status',
         'admin_note',
     ];
