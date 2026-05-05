@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ProposalController extends Controller
 {
@@ -41,18 +42,41 @@ class ProposalController extends Controller
 
     public function store(Request $request)
     {
+        // 1. Validasi FULL semua field
         $validated = $request->validate([
-            // ... (validasi event_name sampai packages sama seperti sebelumnya) ...
+            'event_name' => 'required|string|max:255',
+            'organizer' => 'required|string|max:255',
+            'contact_name' => 'required|string|max:255',
+            'contact_email' => 'required|email|max:255',
+            'contact_phone' => 'required|string|max:20',
+            'event_category' => 'required|string',
+            'event_scale' => 'required|string',
+            'event_date' => 'required|date',
+            'location' => 'required|string|max:255',
+            'expected_participants' => 'required|integer|min:1',
+            'target_audience' => 'required|string',
+            'request_type' => 'required|string',
+            'support_description' => 'nullable|string',
+            'packages' => 'nullable|array',
 
-            // Summary Opsional
+            // Executive Summary sekarang opsional
             'description' => 'nullable|string',
-            // Wajib isi salah satu: File atau Link
-            'proposal_file' => 'required_without:proposal_link|mimes:pdf|max:10240',
+
+            // Wajib isi salah satu: File PDF atau Link URL
+            'proposal_file' => 'required_without:proposal_link|nullable|mimes:pdf|max:10240',
             'proposal_link' => 'required_without:proposal_file|nullable|url',
         ]);
 
         $data = $validated;
 
+        // 2. Format Packages menjadi JSON jika memilih Fresh Money Funding
+        if ($request->request_type === 'Fresh Money Funding' && isset($validated['packages'])) {
+            $data['packages'] = $validated['packages']; // Biarkan berupa array, Model akan otomatis menjadikannya JSON
+        } else {
+            $data['packages'] = null;
+        }
+
+        // 3. Logika penyimpanan File atau Link
         if ($request->hasFile('proposal_file')) {
             $data['proposal_file'] = $request->file('proposal_file')->store('proposals', 'public');
             $data['proposal_link'] = null;
@@ -60,7 +84,10 @@ class ProposalController extends Controller
             $data['proposal_file'] = null;
         }
 
-        // Simpan langsung pakai relasi user agar tidak error user_id
+        // 4. Set status default
+        $data['status'] = 'pending';
+
+        // 5. Simpan langsung menggunakan relasi user yang sedang login
         $request->user()->proposals()->create($data);
 
         return redirect()->route('proposals.index')->with('success', 'Proposal submitted successfully.');
@@ -153,7 +180,7 @@ class ProposalController extends Controller
 
         // 4. Handle JSON Packages
         if ($request->request_type === 'Fresh Money Funding' && isset($validated['packages'])) {
-            $data['packages'] = json_encode($validated['packages']);
+            $data['packages'] = $validated['packages'];
         } else {
             $data['packages'] = null;
         }

@@ -35,9 +35,15 @@
                         class="btn btn-warning btn-lg rounded-pill px-4 fw-bold text-dark shadow-sm"><i
                             class="bi bi-pencil-square me-2"></i> Edit Proposal</a>
                 @endif
-                <a href="{{ Storage::url($proposal->proposal_file) }}" target="_blank"
-                    class="btn btn-dark btn-lg px-5 rounded-pill fw-bold shadow-lg"><i
-                        class="bi bi-file-earmark-pdf-fill me-2"></i> Download PDF</a>
+                @if ($proposal->proposal_link)
+                    <a href="{{ $proposal->proposal_link }}" target="_blank"
+                        class="btn btn-primary btn-lg px-5 rounded-pill fw-bold shadow-lg"><i
+                            class="bi bi-link-45deg me-2 fs-5"></i> Open Link</a>
+                @elseif($proposal->proposal_file)
+                    <a href="{{ Storage::url($proposal->proposal_file) }}" target="_blank"
+                        class="btn btn-dark btn-lg px-5 rounded-pill fw-bold shadow-lg"><i
+                            class="bi bi-file-earmark-pdf-fill me-2"></i> Download PDF</a>
+                @endif
             </div>
         </div>
     </div>

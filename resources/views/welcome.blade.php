@@ -37,13 +37,20 @@
 
                 <div class="col-lg-6 position-relative z-1 d-none d-lg-block">
                     <div class="position-relative mx-auto" style="width: 400px; height: 400px;">
-                        <div class="position-absolute rounded-circle shadow-lg"
-                            style="width: 320px; height: 320px; background: var(--tsel-dark-blue); top: 0; right: 0;">
+
+                        <div class="position-absolute rounded-circle shadow-lg d-flex justify-content-center align-items-center"
+                            style="width: 320px; height: 320px; background: var(--tsel-dark-blue); top: 30px; right: 0; z-index: 1;">
+
+                            <img src="{{ asset('images/telkomsel-seeklogo.png') }}" alt="Telkomsel Icon"
+                                style="width: 150px; height: auto; object-fit: contain; z-index: 2;">
+
                         </div>
+
                         <div class="position-absolute rounded-5 shadow-lg d-flex justify-content-center align-items-center"
                             style="width: 220px; height: 220px; background: var(--tsel-red); bottom: 0; left: 0; z-index: 2;">
                             <i class="bi bi-file-earmark-check text-white" style="font-size: 6rem;"></i>
                         </div>
+
                         <div class="position-absolute bg-white rounded-4 shadow-lg p-3 d-flex align-items-center gap-3"
                             style="bottom: 40px; right: -20px; z-index: 3;">
                             <div class="rounded-circle d-flex align-items-center justify-content-center"
