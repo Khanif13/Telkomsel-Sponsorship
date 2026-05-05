@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('proposals', function (Blueprint $table) {
-            // Add a text column for admin feedback, nullable because not all will have comments
             $table->text('admin_note')->nullable()->after('status');
         });
     }
